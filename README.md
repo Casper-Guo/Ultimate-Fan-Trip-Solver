@@ -1,2 +1,2 @@
-# Ultimate-Fan-Trip
+# Ultimate-Fan-Trip-Solver
 Say you want to watch your team play every other team in the league...
