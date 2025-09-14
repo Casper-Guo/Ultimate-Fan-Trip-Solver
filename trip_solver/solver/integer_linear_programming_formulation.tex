@@ -1,0 +1,124 @@
+\documentclass[11pt]{article}
+
+% Mathematical packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+% Formatting packages
+\usepackage[margin=1in]{geometry}
+\usepackage{enumerate}
+\usepackage{hyperref}
+
+\title{Integer Linear Programming Formulation}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Definitions}
+Let $E$ be the set of events and $T$ be the set of teams one wishes to see. Denote $n_e = |E|$ and $n_t = |T|$. Number the events in chronological order from $1$ to $n_e$ and additionally define a dummy event $e_0$.
+
+Define $\mathbf{C}_{n_e \times n_e}$ to be the cost matrix according to some measure where $C_{ij}$ is the cost of travelling from $e_i$ to $e_j$. Note that this matrix is upper triangular in the sense that the elements below the main diagonal are infinite/undefined since one cannot travel back in time.
+
+Define $\mathbf{M}_{n_e \times n_t}$ to be the matchup matrix where $M_{ij} = 1$ if team $t_j$ participates in event $i$ and 0 otherwise. Note that this matrix is very sparse (with density equal to $1/n_t$) since each row, representing a single event, will involve exactly one team and thus have exactly one entry equal to 1.
+
+\section{Variables}
+Define variables $x_{ij} \in \{0, 1\}$ for all $0 \leq i \leq n_e$ and $0 \leq j \leq n_e$ if and only if it is feasible to travel directly from event $e_i$ to event $e_j$ (i.e., $j > i$). The variable $x_{ij}$ is 1 if one travels directly from event $e_i$ to event $e_j$ and 0 otherwise. These variables can also be represented as a matrix $\mathbf{X}_{n_e \times n_e}$.
+
+Define the visit order variables $u_i$ where $0 \leq i \leq n_e + 1$. $u_i = 0$ if event $e_i$ is not visited and $u_i = k$ if event $e_i$ is the $k$-th event visited in the trip.
+
+\section{Objective Function}
+Minimize:
+
+\begin{equation} \label{eq:objective}
+\sum_{i=1}^{n_e} \sum_{j=1, j \neq i}^{n_e} \mathbf{C}_{ij} x_{ij}
+\end{equation}
+
+\section{Constraints}
+Constraints for the range of variables:
+
+\begin{equation} \label{constr:x}
+    x_{ij} \in \{0, 1\} \; \forall 0 \leq i \leq n_e, 0 \leq j \leq n_e, j > i
+\end{equation}
+
+\begin{equation} \label{constr:u}
+    u_i \in \{0, 1, \ldots, n_t\} \; \forall 0 \leq i \leq n_e
+\end{equation}
+
+Constraints to make sure we get a tour:
+
+\begin{equation} \label{constr:in_edge}
+    \sum_{i=1, i < j}^{n_e} x_{ij} \leq 1 \; \forall 1 \leq j \leq n_e
+\end{equation}
+
+\begin{equation} \label{constr:out_edge}
+    \sum_{j=1, j > i}^{n_e} x_{ij} \leq 1 \; \forall 1 \leq i \leq n_e
+\end{equation}
+
+\begin{equation} \label{constr:order}
+    u_i - u_j \leq (1 - x_{ij})n_t - x_{ij} \; 0 \leq i \neq j \leq n_e
+\end{equation}
+
+We start and end the tour at the dummy event $e_0$. The dummy event is special as it can travel to any event and any event can travel to it with zero cost. It needs a few special constraints.
+
+To make sure we start the tour at the dummy event $e_0$:
+
+\begin{equation} \label{constr:start}
+    u_0 = 1
+\end{equation}
+
+\begin{equation} \label{constr:start_out_edge}
+    \sum_{j=1}^{n_e} x_{0j} = 1
+\end{equation}
+
+To make sure we end the tour at the dummy event $e_0$:
+
+\begin{equation} \label{constr:end}
+    \sum_{i=1}^{n_e} x_{i0} = 1
+\end{equation}
+
+Finally, to make sure we see all teams once and exactly once:
+
+\begin{equation} \label{constr:teams}
+    \sum_{i=0}^{n_e} \sum_{j=1, j > i}^{n_e} x_{ij}M_{jk}  = 1 \; \forall 1 \leq k \leq n_t
+\end{equation}
+
+In other words, all columns of $\mathbf{X} \mathbf{M}$ sum to 1.
+
+\section{Proofs}
+\subsection{Singular Tour}
+Since we do not care to visit all events, the tour order variable's definition is different from that seen in the \href{https://en.wikipedia.org/wiki/Travelling_salesman_problem#Miller%E2%80%93Tucker%E2%80%93Zemlin_formulation}{MTZ formulation}.
+
+Compare the MTZ constraint to our constraint \eqref{constr:order}:
+
+\begin{equation} \label{constr:mtz}
+    u_i - u_j + 1 \leq (n_e - 1)(1 - x_{ij}) \; 1 \leq i \neq j \leq n_e
+\end{equation}
+
+When $x_{ij} = 0$, the MTZ constraint simplifies to $u_i - u_j \leq n_e - 1$ which is just a reformulation of the bounds placed on $u$. In our constraint this simplifies to $u_i - u_j \leq n_t + 1$ which has the same meaning, albeit with a different bound to allow for a tour of $n_t$ events with some events left unvisited.
+
+When $x_{ij} = 1$, the MTZ constraint simplifies to $u_i - u_j \leq -1$, which guarantees that $e_i$ is visited before $e_j$ as expected. In our constraint this simplifies to $u_i - u_j \leq -1$ which is equivalent.
+
+\subsection{Tour Ordering}
+We want for any unvisited event $e_i$ to have $u_i = 0$. If we accept that $u$ increments by 1 along the tour for each visited event from 1 to $n_t + 1$, then we can formulate this as the following constraint:
+
+\begin{equation} \label{constr:unvisited}
+    \sum_{i=0}^{n_g} u_i = \sum_{j=1}^{n_t + 1} j = \frac{(n_t + 2)(n_t + 1)}{2}
+\end{equation}
+
+This constraint is actually implied by constraint \eqref{constr:teams}, which can be rewritten as.
+
+\begin{equation}
+    \sum_{i=0}^{n_e} \sum_{j = 1, j > i}^{n_e} \sum_{k=1}^{n_t} = n_t
+\end{equation}
+
+Consider any fixed $i, j$, there is exactly one $k$ such that $M_{jk} = 1$. Thus constraint \eqref{constr:teams} also implies that there is exactly $n_t$ non-zero $x_{ij}$ variables where $j \geq 1$. Then constraint \eqref{constr:end} provides that there is exactly 1 non-zero $x_{i0}$. So in total we have $n_t + 1$ non-zero $x_{ij}$ variables.
+
+Each non-zero $x_{ij}$ variable correspond to some value of $u_i$. We assumed that these $u_i$ variables are unique and ranges between 1 to $n_t + 1$, and we have shown that there are $n_t + 1$ of them. By the pigeonhole principle, these $u_i$ variables must be exactly the integers from 1 to $n_t + 1$.
+
+\section{Conclusion}
+We have constructed an integer program that is a modified version of the MTZ formulation for TSP. This program has roughly $n_e^2 / 2 + n_e$ binary variables and roughly $n_e^2 + 3n_e + n_t$ constraints.
+
+\end{document}
