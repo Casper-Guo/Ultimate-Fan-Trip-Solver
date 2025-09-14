@@ -50,11 +50,13 @@ Constraints for the range of variables:
 Constraints to make sure we get a tour:
 
 \begin{equation} \label{constr:in_edge}
-    \sum_{i=1, i < j}^{n_e} x_{ij} \leq 1 \; \forall 1 \leq j \leq n_e
+    \sum_{i=0, i < j}^{n_e} x_{ij} \leq 1 \; \forall 1 \leq j \leq n_e
 \end{equation}
 
+$x_{i0}$ refers to the transition to the dummy event, which implies that $e_i$ is the last event visited.
+
 \begin{equation} \label{constr:out_edge}
-    \sum_{j=1, j > i}^{n_e} x_{ij} \leq 1 \; \forall 1 \leq i \leq n_e
+    x_{i0} + \sum_{j=1, j > i}^{n_e} x_{ij} \leq 1 \; \forall 1 \leq i \leq n_e
 \end{equation}
 
 \begin{equation} \label{constr:order}
