@@ -58,7 +58,7 @@ Constraints to make sure we get a tour:
 \end{equation}
 
 \begin{equation} \label{constr:order}
-    u_i - u_j \leq (1 - x_{ij})n_t - x_{ij} \; 0 \leq i \neq j \leq n_e
+    u_i - u_j \leq (1 - x_{ij})(n_t + 1) - x_{ij} \; 0 \leq i \neq j \leq n_e
 \end{equation}
 
 We start and end the tour at the dummy event $e_0$. The dummy event is special as it can travel to any event and any event can travel to it with zero cost. It needs a few special constraints.
