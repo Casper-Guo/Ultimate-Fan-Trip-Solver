@@ -33,7 +33,7 @@ Define the visit order variables $u_i$ where $0 \leq i \leq n_e + 1$. $u_i = 0$ 
 Minimize:
 
 \begin{equation} \label{eq:objective}
-\sum_{i=1}^{n_e} \sum_{j=1, j \neq i}^{n_e} \mathbf{C}_{ij} x_{ij}
+\sum_{i=1}^{n_e} \sum_{j=i+1}^{n_e} \mathbf{C}_{ij} x_{ij}
 \end{equation}
 
 \section{Constraints}
@@ -105,13 +105,13 @@ When $x_{ij} = 1$, the MTZ constraint simplifies to $u_i - u_j \leq -1$, which g
 We want for any unvisited event $e_i$ to have $u_i = 0$. If we accept that $u$ increments by 1 along the tour for each visited event from 1 to $n_t + 1$, then we can formulate this as the following constraint:
 
 \begin{equation} \label{constr:unvisited}
-    \sum_{i=0}^{n_g} u_i = \sum_{j=1}^{n_t + 1} j = \frac{(n_t + 2)(n_t + 1)}{2}
+    \sum_{i=0}^{n_e} u_i = \sum_{j=1}^{n_t + 1} j = \frac{(n_t + 2)(n_t + 1)}{2}
 \end{equation}
 
 This constraint is actually implied by constraint \eqref{constr:teams}, which can be rewritten as.
 
 \begin{equation}
-    \sum_{i=0}^{n_e} \sum_{j = 1, j > i}^{n_e} \sum_{k=1}^{n_t} = n_t
+    \sum_{i=0}^{n_e} \sum_{j = 1, j > i}^{n_e} \sum_{k=1}^{n_t} x_{ij} M_{jk} = n_t
 \end{equation}
 
 Consider any fixed $i, j$, there is exactly one $k$ such that $M_{jk} = 1$. Thus constraint \eqref{constr:teams} also implies that there is exactly $n_t$ non-zero $x_{ij}$ variables where $j \geq 1$. Then constraint \eqref{constr:end} provides that there is exactly 1 non-zero $x_{i0}$. So in total we have $n_t + 1$ non-zero $x_{ij}$ variables.
