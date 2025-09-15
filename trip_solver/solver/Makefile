@@ -5,4 +5,4 @@ BUILD_ARTIFACTS = *.aux *.fls *.log *.fdb_latexmk *.out *.synctex.gz
 
 # Define the clean target
 clean:
-	rm $(BUILD_ARTIFACTS)
+	rm -f $(BUILD_ARTIFACTS)
