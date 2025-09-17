@@ -5,7 +5,7 @@ authors = [{ email = "casperg@umich.edu", name = "Casper Guo" }]
 description = "Arbitrary criteria optimal trip solver with time constraints."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["httpx", "pydantic >= 2.6.0", "requests"]
 
 [build-system]
 requires = ["setuptools >= 61.0"]
@@ -18,6 +18,7 @@ packages = ["trip_solver"]
 skip = "env/"
 
 [tool.mypy]
+plugins = ["pydantic.mypy"]
 strict = true
 exclude_gitignore = true
 warn_unreachable = true
@@ -121,6 +122,7 @@ ignore = [
     "COM812",  # compliance with previous style
     "ISC001",  # conflict with formatter
     "PTH123",  # all open calls already uses Pathlib for file handling
+    "D107",    # usually self-documenting
     "D203",    # conflict with preferred D211 (No blank lines allowed before class docstring)
     "D212",    # conflict with preferred D213 (Multi-line docstring summary should start at the second line)
     "PLR0912", # function too many branches
