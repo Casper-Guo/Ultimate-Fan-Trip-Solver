@@ -1,13 +1,16 @@
 """Generic classes for API integration."""
 
-from abc import ABC, abstractmethod
+import logging
 from enum import StrEnum
 from typing import Any, TypeAlias
 
 import httpx
 from pydantic import BaseModel
 
-query_param_type: TypeAlias = str | int | float | bool | None
+logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
+logger = logging.getLogger(__name__)
+
+query_param_type: TypeAlias = str | int | float | bool
 
 
 class HTTPMethod(StrEnum):
@@ -22,63 +25,129 @@ class HTTPMethod(StrEnum):
     DELETE = "DELETE"
 
 
-def compose_url(base_url: str, path_params: list[str]) -> str:
+def compose_url(base_url: str, path_params: tuple[str, ...]) -> str:
     """Compose a URL by appending the path params, in order, to the base URL."""
     return "/".join([base_url.rstrip("/"), *path_params])
 
 
-def model_to_dict(model: BaseModel) -> dict[str, query_param_type]:
-    """Convert a Pydantic model to a dictionary, excluding None values."""
-    return {
-        key: value
-        for key, value in model.model_dump().items()
-        if isinstance(key, str) and isinstance(value, query_param_type)
-    }
-
-
-class BaseEndpoint(ABC):
-    """Base class for API endpoints."""
-
+class BaseEndpoint:  # noqa: D101
     base_url: str
+    name: str
 
-    def __init__(self, base_url: str) -> None:
+    def __init__(self, base_url: str, name: str) -> None:  # noqa: D107
         self.base_url = base_url
+        self.name = name
 
     def request(
         self,
         method: HTTPMethod,
-        path_params: list[str] | None = None,
+        path_params: tuple[str, ...] = (),
         query_params: BaseModel | None = None,
+        request_body: BaseModel | None = None,
+        headers: BaseModel | None = None,
     ) -> httpx.Response:
         """Prepare httpx request from path params and query params modelled with Pydantic."""
-        if path_params is None:
-            path_params = []
-        query_params_dict = {} if query_params is None else model_to_dict(query_params)
+        query_params_dict = (
+            {}
+            if query_params is None
+            else query_params.model_dump(by_alias=True, exclude_none=True)
+        )
+        request_body_dict = (
+            {}
+            if request_body is None
+            else request_body.model_dump(by_alias=True, exclude_none=True)
+        )
+        headers_dict = (
+            {} if headers is None else headers.model_dump(by_alias=True, exclude_none=True)
+        )
+
+        logger.debug(
+            "Pinging %s at %s",
+            self.name,
+            full_url := compose_url(self.base_url, path_params),
+        )
+        logger.debug("Method: %s", method)
+        logger.debug("Query params: %s", query_params_dict)
+        logger.debug("Request body: %s", request_body_dict)
+        logger.debug("Headers: %s", headers_dict)
 
         return httpx.request(
             method=method.value,
-            url=compose_url(self.base_url, path_params),
+            url=full_url,
             params=query_params_dict,
+            json=request_body_dict,
+            headers=headers_dict,
         )
 
     def get(
-        self, path_params: list[str] | None = None, query_params: BaseModel | None = None
+        self,
+        path_params: tuple[str, ...] = (),
+        query_params: BaseModel | None = None,
+        request_body: BaseModel | None = None,
+        headers: BaseModel | None = None,
     ) -> httpx.Response:
-        """Send a GET request to the endpoint."""
-        return self.request(HTTPMethod.GET, path_params, query_params)
+        """
+        Send a GET request to the endpoint.
+
+        Subclasses should change the function signature to use the appropriate namedtuple class
+        for the path_params parameter.
+        """
+        return self.request(HTTPMethod.GET, path_params, query_params, request_body, headers)
 
     def get_json(
-        self, path_params: list[str] | None = None, query_params: BaseModel | None = None
+        self,
+        path_params: tuple[str, ...] = (),
+        query_params: BaseModel | None = None,
+        request_body: BaseModel | None = None,
+        headers: BaseModel | None = None,
     ) -> Any:  # noqa: ANN401 follow httpx API
         """Send a GET request to the endpoint and return the raw JSON response."""
-        response = self.get(path_params, query_params)
+        response = self.get(path_params, query_params, request_body, headers)
         response.raise_for_status()
         return response.json()
 
-    @abstractmethod
     def get_data(
         self,
-        path_params: list[str] | None = None,
+        path_params: tuple[str, ...] = (),
         query_params: BaseModel | None = None,
+        request_body: BaseModel | None = None,
+        headers: BaseModel | None = None,
+        response_model: type[BaseModel] = BaseModel,
     ) -> BaseModel:
-        """Implement in the subclasses with the appropriate response model."""
+        """Send a GET request and parse the returned JSON into a provided Pydantic model."""
+        return response_model(**self.get_json(path_params, query_params, request_body, headers))
+
+    def post(
+        self,
+        path_params: tuple[str, ...] = (),
+        query_params: BaseModel | None = None,
+        request_body: BaseModel | None = None,
+        headers: BaseModel | None = None,
+    ) -> httpx.Response:
+        """Send a POST request to the endpoint."""
+        return self.request(HTTPMethod.POST, path_params, query_params, request_body, headers)
+
+    def post_for_json(
+        self,
+        path_params: tuple[str, ...] = (),
+        query_params: BaseModel | None = None,
+        request_body: BaseModel | None = None,
+        headers: BaseModel | None = None,
+    ) -> Any:  # noqa: ANN401 follow httpx API
+        """Send a POST request to the endpoint and return the raw JSON response."""
+        response = self.post(path_params, query_params, request_body, headers)
+        response.raise_for_status()
+        return response.json()
+
+    def post_for_data(
+        self,
+        path_params: tuple[str, ...] = (),
+        query_params: BaseModel | None = None,
+        request_body: BaseModel | None = None,
+        headers: BaseModel | None = None,
+        response_model: type[BaseModel] = BaseModel,
+    ) -> BaseModel:
+        """Send a POST request and parse the returned JSON into a provided Pydantic model."""
+        return response_model(
+            **self.post_for_json(path_params, query_params, request_body, headers),
+        )

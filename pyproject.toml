@@ -18,13 +18,18 @@ packages = ["trip_solver"]
 skip = "env/"
 
 [tool.mypy]
+# a copious amount of type: ignore[override] will be used
+# type hints are meant to be hints first and foremost
+# and all endpoint classes are meant to be used separately
 plugins = ["pydantic.mypy"]
 strict = true
 exclude_gitignore = true
 warn_unreachable = true
 
 [tool.ruff]
-include = ["trip_solver/*.py"]
+preview = true
+include = ["trip_solver/**/*.py"]
+exclude = ["test.py"]
 line-length = 96
 indent-width = 4
 
@@ -127,5 +132,11 @@ ignore = [
     "PLR0914", # function too many local variables
     "PLR0915", # function too many statements
     "PLR0917", # function too many positional arguments
+    "TRY003",  # false positives
     "UP015",   # explicit is better than implicit
 ]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"trip_solver/models/api/google_maps/*.py" = [
+    "N815",
+] # Google API uses camelcase parameters
