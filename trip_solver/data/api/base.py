@@ -22,7 +22,7 @@ class HTTPMethod(StrEnum):
     DELETE = "DELETE"
 
 
-def compose_url(base_url: str, path_params: list[str]) -> str:
+def compose_url(base_url: str, path_params: tuple[str, ...]) -> str:
     """Compose a URL by appending the path params, in order, to the base URL."""
     return "/".join([base_url.rstrip("/"), *path_params])
 
@@ -47,12 +47,10 @@ class BaseEndpoint(ABC):
     def request(
         self,
         method: HTTPMethod,
-        path_params: list[str] | None = None,
+        path_params: tuple[str, ...] = (),
         query_params: BaseModel | None = None,
     ) -> httpx.Response:
         """Prepare httpx request from path params and query params modelled with Pydantic."""
-        if path_params is None:
-            path_params = []
         query_params_dict = {} if query_params is None else model_to_dict(query_params)
 
         return httpx.request(
@@ -62,13 +60,18 @@ class BaseEndpoint(ABC):
         )
 
     def get(
-        self, path_params: list[str] | None = None, query_params: BaseModel | None = None
+        self, path_params: tuple[str, ...] = (), query_params: BaseModel | None = None
     ) -> httpx.Response:
-        """Send a GET request to the endpoint."""
+        """
+        Send a GET request to the endpoint.
+
+        Subclasses should change the function signature to use the appropriate namedtuple class
+        for the path_params parameter.
+        """
         return self.request(HTTPMethod.GET, path_params, query_params)
 
     def get_json(
-        self, path_params: list[str] | None = None, query_params: BaseModel | None = None
+        self, path_params: tuple[str, ...] = (), query_params: BaseModel | None = None
     ) -> Any:  # noqa: ANN401 follow httpx API
         """Send a GET request to the endpoint and return the raw JSON response."""
         response = self.get(path_params, query_params)
@@ -78,7 +81,7 @@ class BaseEndpoint(ABC):
     @abstractmethod
     def get_data(
         self,
-        path_params: list[str] | None = None,
+        path_params: tuple[str, ...] = (),
         query_params: BaseModel | None = None,
     ) -> BaseModel:
         """Implement in the subclasses with the appropriate response model."""
