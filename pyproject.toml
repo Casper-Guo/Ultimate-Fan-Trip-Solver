@@ -119,10 +119,7 @@ select = [
 ]
 
 ignore = [
-    "COM812",  # compliance with previous style
     "ISC001",  # conflict with formatter
-    "PTH123",  # all open calls already uses Pathlib for file handling
-    "D107",    # usually self-documenting
     "D203",    # conflict with preferred D211 (No blank lines allowed before class docstring)
     "D212",    # conflict with preferred D213 (Multi-line docstring summary should start at the second line)
     "PLR0912", # function too many branches
@@ -131,7 +128,4 @@ ignore = [
     "PLR0915", # function too many statements
     "PLR0917", # function too many positional arguments
     "UP015",   # explicit is better than implicit
-    "FURB101", # Nothing wrong with using open and read
-    "FURB118", # this is not better
-    "TRY003",  # too nitpicky
 ]
