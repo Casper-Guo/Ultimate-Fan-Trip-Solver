@@ -4,6 +4,7 @@ from typing import Literal, TypeAlias
 
 from pydantic import Field, field_serializer
 
+from trip_solver.models.api.google_maps.common import LatLng, LocalizedText
 from trip_solver.util.models import FrozenModel, StrictModel
 
 # not a complete list, see https://developers.google.com/maps/documentation/places/web-service/text-search#fieldmask
@@ -32,8 +33,8 @@ class TextSearchRequestBody(StrictModel):
     See https://developers.google.com/maps/documentation/places/web-service/text-search#optional-parameters
     """
 
-    # see all available types at https://developers.google.com/maps/documentation/places/web-service/place-types#table-a
     textQuery: str
+    # see all available types at https://developers.google.com/maps/documentation/places/web-service/place-types#table-a
     includedType: str = "sports_activity_location"
     strictTypeFiltering: bool = True
 
@@ -51,19 +52,9 @@ class TextSearchHeader(StrictModel):  # noqa: D101
     )
 
     @field_serializer("fields")
-    def serialize_fields(self, fields: TextSearchReturnFields) -> str:  # noqa: PLR6301 idiomatic Pydantic usage
+    def serialize_fields(self, fields: TextSearchReturnFields) -> str:  # noqa: PLR6301
         """Convert tuple of fields to comma-separated string."""
         return ",".join(fields)
-
-
-class LocalizedText(StrictModel):  # noqa: D101
-    text: str
-    languageCode: str
-
-
-class LatLng(StrictModel):  # noqa: D101
-    latitude: float = Field(ge=-90, le=90)
-    longitude: float = Field(ge=-180, le=180)
 
 
 class PlaceResponse(FrozenModel):
