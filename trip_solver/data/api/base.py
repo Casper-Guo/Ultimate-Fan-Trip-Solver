@@ -103,7 +103,11 @@ class BaseEndpoint:  # noqa: D101
     ) -> Any:  # noqa: ANN401 follow httpx API
         """Send a GET request to the endpoint and return the raw JSON response."""
         response = self.get(path_params, query_params, request_body, headers)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            logger.exception(exc.response.text)
+            raise
         return response.json()
 
     def get_data(
@@ -115,7 +119,8 @@ class BaseEndpoint:  # noqa: D101
         response_model: type[BaseModel] = BaseModel,
     ) -> BaseModel:
         """Send a GET request and parse the returned JSON into a provided Pydantic model."""
-        return response_model(**self.get_json(path_params, query_params, request_body, headers))
+        response = self.get_json(path_params, query_params, request_body, headers)
+        return response_model(**response)
 
     def post(
         self,
@@ -136,7 +141,11 @@ class BaseEndpoint:  # noqa: D101
     ) -> Any:  # noqa: ANN401 follow httpx API
         """Send a POST request to the endpoint and return the raw JSON response."""
         response = self.post(path_params, query_params, request_body, headers)
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            logger.exception(exc.response.text)
+            raise
         return response.json()
 
     def post_for_data(
@@ -148,6 +157,6 @@ class BaseEndpoint:  # noqa: D101
         response_model: type[BaseModel] = BaseModel,
     ) -> BaseModel:
         """Send a POST request and parse the returned JSON into a provided Pydantic model."""
-        return response_model(
-            **self.post_for_json(path_params, query_params, request_body, headers),
-        )
+        response = self.post_for_json(path_params, query_params, request_body, headers)
+        logger.debug("Response JSON: %s", response)
+        return response_model(**response)
