@@ -6,6 +6,7 @@ from typing import Self
 
 from pydantic import field_serializer, field_validator, model_validator
 
+from trip_solver.models.api.mlb.common import MLBVenue
 from trip_solver.util.models import FrozenModel, StrictModel
 
 
@@ -92,7 +93,7 @@ class MLBTeamLeagueRecord(FrozenModel):  # noqa: D101
     pct: float
 
 
-class MLBTeamMetadata(FrozenModel):  # noqa: D101
+class MLBTeamId(FrozenModel):  # noqa: D101
     id: int
     name: str
 
@@ -100,17 +101,12 @@ class MLBTeamMetadata(FrozenModel):  # noqa: D101
 class MLBTeam(FrozenModel):  # noqa: D101
     # not needed at the moment
     # leagueRecord: MLBTeamLeagueRecord  # noqa: ERA001
-    team: MLBTeamMetadata
+    team: MLBTeamId
 
 
 class MLBTeams(FrozenModel):  # noqa: D101
     away: MLBTeam
     home: MLBTeam
-
-
-class MLBVenue(FrozenModel):  # noqa: D101
-    id: int
-    name: str
 
 
 class MLBGame(FrozenModel):  # noqa: D101

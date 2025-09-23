@@ -37,7 +37,7 @@ class RouteMatrix(GoogleMapsAPI):  # noqa: D101
     ) -> RouteMatrixResponse:
         if path_params != () or query_params is not None:
             logger.warning(
-                "%s does not accept path or query parameters. Passing one has no effect.",
+                "%s does not accept path or query parameters. Ignoring passed value.",
                 self.name,
             )
         if request_body is None:
