@@ -5,6 +5,7 @@ Only text search is implemented for now.
 """
 
 import logging
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -29,7 +30,7 @@ class TextSearch(GoogleMapsAPI):  # noqa: D101
     def post_for_data(  # noqa: D102
         self,
         # not accepted
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         # not accepted
         query_params: BaseModel | None = None,
         # required

@@ -1,5 +1,7 @@
 """Generic GCP API for handling authentication."""
 
+from typing import Any
+
 import httpx
 from pydantic import BaseModel, Field
 
@@ -21,7 +23,7 @@ class GoogleMapsAPI(BaseEndpoint):
     def request(
         self,
         method: HTTPMethod,
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         query_params: BaseModel | None = None,
         request_body: BaseModel | None = None,
         headers: BaseModel | None = None,
