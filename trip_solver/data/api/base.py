@@ -78,6 +78,7 @@ class BaseEndpoint:  # noqa: D101
             params=query_params_dict,
             json=request_body_dict,
             headers=headers_dict,
+            follow_redirects=True,
         )
 
     def get(

@@ -137,7 +137,6 @@ ignore = [
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
-"trip_solver/models/api/google_maps/*.py" = [
+"trip_solver/models/api/**/*.py" = [
     "N815",
-] # Google API uses camelcase parameters
-"trip_solver/models/api/mlb/*.py" = ["N815"] # MLB API uses camelcase parameters
+] # APIs use camel case parameter names
