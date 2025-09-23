@@ -140,3 +140,4 @@ ignore = [
 "trip_solver/models/api/google_maps/*.py" = [
     "N815",
 ] # Google API uses camelcase parameters
+"trip_solver/models/api/mlb/*.py" = ["N815"] # MLB API uses camelcase parameters
