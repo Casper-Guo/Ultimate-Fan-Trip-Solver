@@ -49,17 +49,17 @@ class BaseEndpoint:  # noqa: D101
         """Prepare httpx request from path params and query params modelled with Pydantic."""
         path_params_tuple = () if path_params is None else tuple(str(i) for i in path_params)
         query_params_dict = (
-            {}
+            None
             if query_params is None
             else query_params.model_dump(by_alias=True, exclude_none=True)
         )
         request_body_dict = (
-            {}
+            None
             if request_body is None
             else request_body.model_dump(by_alias=True, exclude_none=True)
         )
         headers_dict = (
-            {} if headers is None else headers.model_dump(by_alias=True, exclude_none=True)
+            None if headers is None else headers.model_dump(by_alias=True, exclude_none=True)
         )
 
         logger.debug(
