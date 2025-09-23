@@ -116,8 +116,37 @@ class RouteMatrixRequestBody(StrictModel):
     def serialize_enums(self, v: StrEnum) -> str:  # noqa: D102, PLR6301
         return v.value
 
+    @field_validator("travelMode", mode="before")
+    @classmethod
+    def validate_travel_mode(cls, v: str | RouteTravelMode) -> RouteTravelMode:  # noqa: D102
+        if isinstance(v, RouteTravelMode):
+            return v
+        return RouteTravelMode(v)
+
+    @field_validator("routingPreference", mode="before")
+    @classmethod
+    def validate_routing_preference(cls, v: str | RoutingPreference) -> RoutingPreference:  # noqa: D102
+        if isinstance(v, RoutingPreference):
+            return v
+        return RoutingPreference(v)
+
+    @field_validator("units", mode="before")
+    @classmethod
+    def validate_units(cls, v: str | Units) -> Units:  # noqa: D102
+        if isinstance(v, Units):
+            return v
+        return Units(v)
+
+    @field_validator("trafficModel", mode="before")
+    @classmethod
+    def validate_traffic_model(cls, v: str | TrafficModel) -> TrafficModel:  # noqa: D102
+        if isinstance(v, TrafficModel):
+            return v
+        return TrafficModel(v)
+
     @field_validator("departureTime", "arrivalTime", mode="before")
-    def convert_timestamp_to_rfc3339(cls, v: str | datetime | None) -> str | None:  # noqa: N805
+    @classmethod
+    def convert_timestamp_to_rfc3339(cls, v: str | datetime | None) -> str | None:
         """Convert datetime object to RFC 3339 string."""
         if v is None or isinstance(v, str):
             return v
@@ -173,7 +202,8 @@ class RouteMatrixStatus(StrictModel):  # noqa: D101
     details: list[Any] = Field(default_factory=list)
 
     @field_validator("code", mode="before")
-    def convert_code_to_enum(cls, v: int) -> gRPCCode:  # noqa: D102, N805
+    @classmethod
+    def convert_code_to_enum(cls, v: int) -> gRPCCode:  # noqa: D102
         return gRPCCode(v)
 
 
@@ -199,11 +229,13 @@ class RouteMatrixElementFallbackInfo(StrictModel):  # noqa: D101
     reason: FallbackReason
 
     @field_validator("routingMode", mode="before")
-    def convert_routing_mode_to_enum(cls, v: str) -> FallbackRoutingMode:  # noqa: D102, N805
+    @classmethod
+    def convert_routing_mode_to_enum(cls, v: str) -> FallbackRoutingMode:  # noqa: D102
         return FallbackRoutingMode(v)
 
     @field_validator("reason", mode="before")
-    def convert_reason_to_enum(cls, v: str) -> FallbackReason:  # noqa: D102, N805
+    @classmethod
+    def convert_reason_to_enum(cls, v: str) -> FallbackReason:  # noqa: D102
         return FallbackReason(v)
 
 
@@ -226,14 +258,16 @@ class RouteMatrixElement(FrozenModel):  # noqa: D101
     destinationIndex: int | None = Field(None, ge=0)
 
     @field_validator("condition", mode="before")
-    def convert_condition_to_enum(cls, v: str | None) -> RouteMatrixElementCondition | None:  # noqa: N805
+    @classmethod
+    def convert_condition_to_enum(cls, v: str | None) -> RouteMatrixElementCondition | None:
         """Convert condition string to enum."""
         if v is None:
             return v
         return RouteMatrixElementCondition(v)
 
     @field_validator("duration", "staticDuration", mode="before")
-    def convert_duration_to_int(cls, v: str | None) -> int | None:  # noqa: N805
+    @classmethod
+    def convert_duration_to_int(cls, v: str | None) -> int | None:
         """
         Convert API returned duration string to the nearest integer number of seconds.
 
