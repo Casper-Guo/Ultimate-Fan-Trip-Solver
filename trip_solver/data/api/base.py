@@ -41,12 +41,13 @@ class BaseEndpoint:  # noqa: D101
     def request(
         self,
         method: HTTPMethod,
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         query_params: BaseModel | None = None,
         request_body: BaseModel | None = None,
         headers: BaseModel | None = None,
     ) -> httpx.Response:
         """Prepare httpx request from path params and query params modelled with Pydantic."""
+        path_params_tuple = () if path_params is None else tuple(str(i) for i in path_params)
         query_params_dict = (
             {}
             if query_params is None
@@ -64,7 +65,7 @@ class BaseEndpoint:  # noqa: D101
         logger.debug(
             "Pinging %s at %s",
             self.name,
-            full_url := compose_url(self.base_url, path_params),
+            full_url := compose_url(self.base_url, path_params_tuple),
         )
         logger.debug("Method: %s", method)
         logger.debug("Query params: %s", query_params_dict)
@@ -81,7 +82,7 @@ class BaseEndpoint:  # noqa: D101
 
     def get(
         self,
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         query_params: BaseModel | None = None,
         request_body: BaseModel | None = None,
         headers: BaseModel | None = None,
@@ -96,7 +97,7 @@ class BaseEndpoint:  # noqa: D101
 
     def get_json(
         self,
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         query_params: BaseModel | None = None,
         request_body: BaseModel | None = None,
         headers: BaseModel | None = None,
@@ -112,7 +113,7 @@ class BaseEndpoint:  # noqa: D101
 
     def get_data(
         self,
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         query_params: BaseModel | None = None,
         request_body: BaseModel | None = None,
         headers: BaseModel | None = None,
@@ -124,7 +125,7 @@ class BaseEndpoint:  # noqa: D101
 
     def post(
         self,
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         query_params: BaseModel | None = None,
         request_body: BaseModel | None = None,
         headers: BaseModel | None = None,
@@ -134,7 +135,7 @@ class BaseEndpoint:  # noqa: D101
 
     def post_for_json(
         self,
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         query_params: BaseModel | None = None,
         request_body: BaseModel | None = None,
         headers: BaseModel | None = None,
@@ -150,7 +151,7 @@ class BaseEndpoint:  # noqa: D101
 
     def post_for_data(
         self,
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         query_params: BaseModel | None = None,
         request_body: BaseModel | None = None,
         headers: BaseModel | None = None,

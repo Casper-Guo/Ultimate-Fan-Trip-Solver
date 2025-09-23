@@ -1,6 +1,7 @@
 """MLB schedule endpoint."""
 
 import logging
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -21,7 +22,7 @@ class MLBSchedule(BaseEndpoint):  # noqa: D101
     def get_data(  # noqa: D102
         self,
         # not accepted
-        path_params: tuple[str, ...] = (),
+        path_params: tuple[Any, ...] = (),
         # required
         query_params: MLBScheduleQueryParams | None = None,  # type: ignore[override]
         # not accepted
