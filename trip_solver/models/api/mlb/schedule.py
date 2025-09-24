@@ -2,12 +2,15 @@
 
 from datetime import date, datetime
 from enum import StrEnum
-from typing import Self
+from typing import Annotated, Self
 
-from pydantic import field_serializer, field_validator, model_validator
+from pydantic import AfterValidator, field_serializer, field_validator, model_validator
 
 from trip_solver.models.api.mlb.common import MLBVenue
 from trip_solver.util.models import FrozenModel, StrictModel
+from trip_solver.util.validators import check_acceptable_date_input
+
+DateParam = Annotated[str | None, AfterValidator(check_acceptable_date_input)]
 
 
 class MLBGameType(StrEnum):  # noqa: D101
@@ -44,9 +47,9 @@ class MLBScheduleQueryParams(StrictModel):
     gameTypes: list[MLBGameType] | None = None
     # would be easy to have these as date objects
     # but that requires additional validators and serializers
-    date: str | None = None  # YYYY-MM-DD
-    startDate: str | None = None  # YYYY-MM-DD
-    endDate: str | None = None  # YYYY-MM-DD
+    date: DateParam = None  # YYYY-MM-DD
+    startDate: DateParam = None  # YYYY-MM-DD
+    endDate: DateParam = None  # YYYY-MM-DD
     opponentId: int | None = None
 
     @field_validator("gameType", mode="before")
