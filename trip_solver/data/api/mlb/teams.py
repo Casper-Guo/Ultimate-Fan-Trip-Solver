@@ -6,7 +6,11 @@ from typing import Any
 from pydantic import BaseModel
 
 from trip_solver.data.api import BaseEndpoint
-from trip_solver.models.api.mlb.teams import MLBTeamPathParams, MLBTeamsResponse
+from trip_solver.models.api.mlb.teams import (
+    MLBTeamsPathParams,
+    MLBTeamsQueryParams,
+    MLBTeamsResponse,
+)
 
 logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
@@ -21,17 +25,28 @@ class MLBTeams(BaseEndpoint):  # noqa: D101
 
     def get_data(  # noqa: D102
         self,
+        # specify at most one of the following two
         path_params: tuple[Any, ...] = (),
-        query_params: BaseModel | None = None,
+        query_params: MLBTeamsQueryParams | None = None,  # type: ignore[override]
+        # not accepted
         request_body: BaseModel | None = None,
+        # not accepted
         headers: BaseModel | None = None,
         response_model: type[BaseModel] = MLBTeamsResponse,
     ) -> MLBTeamsResponse:
-        if not isinstance(path_params, MLBTeamPathParams):
-            raise TypeError(
-                f"path_params must be provided for {self.name} as MLBTeamPathParams.",
+        if len(path_params) > 0:
+            if not isinstance(path_params, MLBTeamsPathParams):
+                raise TypeError(
+                    f"path_params must be provided for {self.name} as MLBTeamsPathParams.",
+                )
+            if query_params is not None:
+                raise ValueError("Query params have no effect when path_params is provided.")
+        elif query_params is None:
+            logger.warning(
+                "Specifying neither path nor query parameters will result in excessive "
+                "data being returned and the data validation will likely fail.",
             )
-        if query_params is not None or request_body is not None or headers is not None:
+        if request_body is not None or headers is not None:
             logger.warning(
                 "%s does not accept query params, request_body, or headers. Ignoring passed values.",  # noqa: E501
                 self.name,
@@ -39,6 +54,6 @@ class MLBTeams(BaseEndpoint):  # noqa: D101
         if response_model is not MLBTeamsResponse:
             raise TypeError(f"response_model must be MLBTeamsResponse for {self.name}.")
 
-        response = self.get_json(path_params, None, None, None)
+        response = self.get_json(path_params, query_params, None, None)
         logger.debug("Response JSON: %s", response)
         return response_model(**response)  # type: ignore[return-value]
