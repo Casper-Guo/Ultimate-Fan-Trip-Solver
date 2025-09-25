@@ -25,11 +25,10 @@ class NBAGame(FrozenModel):  # noqa: D101
     weekNumber: int
     # regular season games usually do not get a label
     gameLabel: str
-    gameSubLabel: str
     arenaName: str
     arenaState: str
     arenaCity: str
-    gameSubtype: str
+    isNeutral: bool
     homeTeam: NBATeam
     awayTeam: NBATeam
 
