@@ -1,4 +1,4 @@
-"""NHL schedule endpoints query params and response models."""
+"""NHL schedule endpoints path params and response models."""
 
 from datetime import date
 from enum import IntEnum
