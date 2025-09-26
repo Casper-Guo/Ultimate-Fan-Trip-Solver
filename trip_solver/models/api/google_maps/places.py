@@ -34,9 +34,6 @@ class TextSearchRequestBody(StrictModel):
     """
 
     textQuery: str
-    # see all available types at https://developers.google.com/maps/documentation/places/web-service/place-types#table-a
-    includedType: str = "sports_activity_location"
-    strictTypeFiltering: bool = True
 
 
 class TextSearchHeader(StrictModel):  # noqa: D101
