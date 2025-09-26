@@ -10,7 +10,8 @@ from trip_solver.util.models import FrozenModel
 class NBATeam(FrozenModel):
     """Some games are scheduled without knowing which teams will play."""
 
-    teamId: int | None = None
+    # when other attributes are not given, teamId is set to 0
+    teamId: int
     teamName: str | None = None
     teamCity: str | None = None
     teamTricode: str | None = None
