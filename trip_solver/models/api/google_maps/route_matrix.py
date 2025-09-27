@@ -6,6 +6,11 @@ from typing import Any, Literal, Self, TypeAlias
 
 from pydantic import Field, field_serializer, field_validator, model_validator
 
+from trip_solver.data.api.google_maps import (
+    TRAFFIC_AWARE_MAX_ELEMENTS,
+    TRAFFIC_UNAWARE_MAX_ELEMENTS,
+    TRAFFIC_UNAWARE_MAX_ORIGINS_DESTINATIONS,
+)
 from trip_solver.models.api.google_maps.common import LocalizedText, Waypoint, gRPCCode
 from trip_solver.util.models import FrozenModel, StrictModel
 
@@ -106,7 +111,7 @@ class RouteMatrixRequestBody(StrictModel):
     arrivalTime: str | None = None
     languageCode: str = "en-US"
     regionCode: str = "us"
-    units: Units = Units.IMPERIAL
+    units: Units = Units.METRIC
     trafficModel: TrafficModel = TrafficModel.TRAFFIC_MODEL_UNSPECIFIED
     # available but not modelled/used
     # extraComputations: list[ExtraComputation] | None = None  # noqa: ERA001
@@ -162,10 +167,11 @@ class RouteMatrixRequestBody(StrictModel):
         See https://developers.google.com/maps/documentation/routes/reference/rest/v2/TopLevel/computeRouteMatrix#request-body
         """
         if (
-            len(self.origins) + len(self.destinations) > 50  # noqa: PLR2004
-            or len(self.origins) * len(self.destinations) > 625  # noqa: PLR2004
+            len(self.origins) + len(self.destinations)
+            > TRAFFIC_UNAWARE_MAX_ORIGINS_DESTINATIONS
+            or len(self.origins) * len(self.destinations) > TRAFFIC_UNAWARE_MAX_ELEMENTS
             or (
-                len(self.origins) * len(self.destinations) > 100  # noqa: PLR2004
+                len(self.origins) * len(self.destinations) > TRAFFIC_AWARE_MAX_ELEMENTS
                 and (
                     self.routingPreference is RoutingPreference.TRAFFIC_AWARE_OPTIMAL
                     or self.travelMode is RouteTravelMode.TRANSIT
