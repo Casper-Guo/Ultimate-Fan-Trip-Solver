@@ -23,7 +23,7 @@ class MLBSchedule(BaseEndpoint):  # noqa: D101
         self,
         # not accepted
         path_params: tuple[Any, ...] = (),
-        # required
+        # default provided
         query_params: MLBScheduleQueryParams | None = None,  # type: ignore[override]
         # not accepted
         request_body: BaseModel | None = None,
@@ -37,7 +37,7 @@ class MLBSchedule(BaseEndpoint):  # noqa: D101
                 self.name,
             )
         if query_params is None:
-            raise ValueError(f"query_params must be provided for {self.name}.")
+            query_params = MLBScheduleQueryParams()
         if request_body is not None or headers is not None:
             logger.warning(
                 "%s does not accept request body or headers. Ignoring passed value.",

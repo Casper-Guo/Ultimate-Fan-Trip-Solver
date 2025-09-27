@@ -26,6 +26,7 @@ class MLBTeams(BaseEndpoint):  # noqa: D101
     def get_data(  # noqa: D102
         self,
         # specify at most one of the following two
+        # default provided to return only current MLB teams
         path_params: tuple[Any, ...] = (),
         query_params: MLBTeamsQueryParams | None = None,  # type: ignore[override]
         # not accepted
@@ -42,14 +43,10 @@ class MLBTeams(BaseEndpoint):  # noqa: D101
             if query_params is not None:
                 raise ValueError("Query params have no effect when path_params is provided.")
         elif query_params is None:
-            logger.warning(
-                "Specifying neither path nor query parameters will result in excessive "
-                "data being returned and the data validation will likely fail.",
-            )
+            query_params = MLBTeamsQueryParams()
         if request_body is not None or headers is not None:
             logger.warning(
-                "%s does not accept query params, request_body, or headers. "
-                "Ignoring passed values.",
+                "%s does not accept request_body or headers. Ignoring passed values.",
                 self.name,
             )
         if response_model is not MLBTeamsResponse:
