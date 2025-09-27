@@ -15,7 +15,7 @@ class MLBTeamsPathParams(NamedTuple):  # noqa: D101
 class MLBTeamsQueryParams(FrozenModel):  # noqa: D101
     # only tested parameters included
     # see available sport ids at https://statsapi.mlb.com/api/v1/sports
-    sportId: int | None = None
+    sportId: int | None = 1
     sportIds: list[int] | None = None
 
     @field_serializer("sportIds")

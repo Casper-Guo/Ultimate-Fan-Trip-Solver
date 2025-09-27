@@ -120,6 +120,7 @@ class MLBGame(FrozenModel):  # noqa: D101
     officialDate: date  # YYYY-MM-DD
     teams: MLBTeams
     venue: MLBVenue
+    seriesDescription: str
 
     @field_validator("gameType", mode="before")
     @classmethod
