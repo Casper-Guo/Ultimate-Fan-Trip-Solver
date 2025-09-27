@@ -48,7 +48,8 @@ class MLBTeams(BaseEndpoint):  # noqa: D101
             )
         if request_body is not None or headers is not None:
             logger.warning(
-                "%s does not accept query params, request_body, or headers. Ignoring passed values.",  # noqa: E501
+                "%s does not accept query params, request_body, or headers. "
+                "Ignoring passed values.",
                 self.name,
             )
         if response_model is not MLBTeamsResponse:
