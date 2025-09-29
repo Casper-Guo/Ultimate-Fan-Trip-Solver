@@ -77,7 +77,7 @@ class NHLScheduleGameday(FrozenModel):  # noqa: D101
 
 
 class NHLScheduleResponse(FrozenModel):  # noqa: D101
-    nextStartDate: date
+    nextStartDate: date | None = None
     previousStartDate: date
     preSeasonStartDate: date
     regularSeasonStartDate: date
@@ -89,7 +89,7 @@ class NHLScheduleResponse(FrozenModel):  # noqa: D101
 
 class NHLClubScheduleResponse(FrozenModel):  # noqa: D101
     previousStartDate: date
-    nextStartDate: date
+    nextStartDate: date | None = None
     games: list[NHLScheduleGame]
 
 
