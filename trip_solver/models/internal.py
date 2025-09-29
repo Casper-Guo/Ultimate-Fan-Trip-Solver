@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import TypeAlias
 
-from pydantic import field_serializer
+from pydantic import field_serializer, field_validator
 
 from trip_solver.models.api.google_maps.common import LatLng
 from trip_solver.util.models import ExtraFrozenModel
@@ -15,6 +15,11 @@ CostMatrix: TypeAlias = dict[str, dict[str, int]]
 class Team(ExtraFrozenModel):  # noqa: D101
     name: str
     id: str
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def parse_id(cls, v: int | str) -> str:  # noqa: D102
+        return str(v)
 
 
 class Teams(ExtraFrozenModel):  # noqa: D101
@@ -28,17 +33,29 @@ class Venue(ExtraFrozenModel):  # noqa: D101
     place_id: str
     location: LatLng
 
+    @field_validator("id", mode="before")
+    @classmethod
+    def parse_id(cls, v: int | str) -> str:  # noqa: D102
+        return str(v)
+
 
 class Venues(ExtraFrozenModel):  # noqa: D101
     venues: list[Venue]
 
 
 class Event(ExtraFrozenModel):  # noqa: D101
+    # we are enforcing the IDs as strs mostly for compatibility with NBA
+    # where event IDs are numerical but may contain leading zeros
     id: str
     time: datetime
     venue_id: str
     home_team_id: str
     away_team_id: str
+
+    @field_validator("id", "home_team_id", "away_team_id", mode="before")
+    @classmethod
+    def parse_id(cls, v: int | str) -> str:  # noqa: D102
+        return str(v)
 
     @field_serializer("time")
     @classmethod

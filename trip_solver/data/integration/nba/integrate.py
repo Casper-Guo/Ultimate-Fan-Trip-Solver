@@ -4,13 +4,10 @@ import logging
 from itertools import starmap
 from pathlib import Path
 
-from pydantic import ValidationError
-
-from trip_solver.data.api.google_maps.places import TextSearch
 from trip_solver.data.api.nba.schedule import NBASchedule
-from trip_solver.models.api.google_maps.places import TextSearchRequestBody
+from trip_solver.data.integration import get_venue_info
 from trip_solver.models.api.nba.schedule import NBAGame, NBATeam
-from trip_solver.models.internal import Event, Events, Team, Teams, Venue, Venues
+from trip_solver.models.internal import Event, Events, Team, Teams, Venues
 
 logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
@@ -23,30 +20,6 @@ def format_team_info(team: NBATeam) -> tuple[str, str]:  # noqa: D103
 def get_arena_full_name(game: NBAGame) -> str:
     """Get the full name of an NBA arena."""
     return f"{game.arenaName}, {game.arenaCity} {game.arenaState}"
-
-
-def get_venue_info(arena_full_name: str, arena_id: str) -> Venue:
-    """Format the response from the Google Maps Places API."""
-    try:
-        response = (
-            TextSearch()
-            .post_for_data(
-                request_body=TextSearchRequestBody(textQuery=arena_full_name),
-            )
-            .places[0]
-        )
-    except ValidationError:
-        logger.exception("No matching places for %s", arena_full_name)
-        raise
-
-    return Venue(
-        # save the name without the city and state
-        name=arena_full_name.split(",", maxsplit=1)[0],
-        id=arena_id,
-        address=response.formattedAddress,
-        place_id=response.id,
-        location=response.location,
-    )
 
 
 def determine_game_eligibility(game: NBAGame) -> bool:
@@ -75,7 +48,7 @@ if __name__ == "__main__":
                 unique_teams.add(format_team_info(game.homeTeam))
                 unique_teams.add(format_team_info(game.awayTeam))
 
-    teams = Teams(teams=[Team(id=id_, name=name).model_dump() for id_, name in unique_teams])
+    teams = Teams(teams=[Team(id=id_, name=name) for id_, name in unique_teams])
     venues = Venues(venues=list(starmap(get_venue_info, arena_ids.items())))
     logger.info("Finished pinging Places API.")
 
@@ -85,9 +58,9 @@ if __name__ == "__main__":
                 id=game.gameId,
                 time=game.gameDateTimeUTC,
                 venue_id=arena_ids[get_arena_full_name(game)],
-                home_team_id=str(game.homeTeam.teamId),
-                away_team_id=str(game.awayTeam.teamId),
-            ).model_dump()
+                home_team_id=game.homeTeam.teamId,
+                away_team_id=game.awayTeam.teamId,
+            )
             for game_date in nba_schedule.leagueSchedule.gameDates
             for game in game_date.games
             if determine_game_eligibility(game)

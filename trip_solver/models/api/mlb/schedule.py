@@ -130,8 +130,6 @@ class MLBGame(FrozenModel):  # noqa: D101
     @field_validator("season", mode="before")
     @classmethod
     def convert_season_to_int(cls, v: str | int) -> int:  # noqa: D102
-        if isinstance(v, int):
-            return v
         return int(v)
 
 
