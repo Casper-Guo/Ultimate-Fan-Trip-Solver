@@ -23,37 +23,40 @@ if __name__ == "__main__":
                 id=team.id,
                 name=team.name,
             )
-            for team in mlb_teams.teams
+            for team in sorted(mlb_teams.teams, key=lambda team: team.id)
         ],
     )
+    team_index = {team.id: team for team in teams.teams}
 
     # construct a mapping from venue ID to the team's location to aid venue lookup
     stadium_locations = {team.venue.id: team.locationName for team in mlb_teams.teams}
-    # The As are scheduled to play a few games in Las Vegas
+    # The As are scheduled to play a few games at the Las Vegas Ballpark
     stadium_locations[5355] = "Las Vegas"
 
     unique_venues = {
-        (game.venue.name, game.venue.id) for date in mlb_schedule.dates for game in date.games
+        (game.venue.id, game.venue.name) for date in mlb_schedule.dates for game in date.games
     }
     venues = Venues(
         venues=[
             get_venue_info(
-                f"{venue_name}, {stadium_locations.get(venue_id, '')}",
+                venue_name,
+                stadium_locations.get(venue_id, ""),
                 venue_id,
             )
-            for venue_name, venue_id in unique_venues
+            for venue_id, venue_name in sorted(unique_venues)
         ],
     )
     logger.info("Finished pinging Places API.")
+    venue_index = {venue.id: venue for venue in venues.venues}
 
     events = Events(
         events=[
             Event(
                 id=game.gamePk,
                 time=game.gameDate,
-                venue_id=game.venue.id,
-                home_team_id=game.teams.home.team.id,
-                away_team_id=game.teams.away.team.id,
+                venue=venue_index[game.venue.id],
+                home_team=team_index[game.teams.home.team.id],
+                away_team=team_index[game.teams.away.team.id],
             )
             for date in mlb_schedule.dates
             for game in date.games
