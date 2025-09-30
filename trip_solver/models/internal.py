@@ -9,17 +9,12 @@ from trip_solver.models.api.google_maps.common import LatLng
 from trip_solver.util.models import ExtraFrozenModel
 
 # this cannot be a Pydantic model since we do not know the keys in advance
-CostMatrix: TypeAlias = dict[str, dict[str, int]]
+CostMatrix: TypeAlias = dict[int | str, dict[int | str, int]]
 
 
 class Team(ExtraFrozenModel):  # noqa: D101
     name: str
-    id: str
-
-    @field_validator("id", mode="before")
-    @classmethod
-    def parse_id(cls, v: int | str) -> str:  # noqa: D102
-        return str(v)
+    id: int
 
 
 class Teams(ExtraFrozenModel):  # noqa: D101
@@ -28,15 +23,14 @@ class Teams(ExtraFrozenModel):  # noqa: D101
 
 class Venue(ExtraFrozenModel):  # noqa: D101
     name: str
-    id: str
+    id: int
     address: str
+    # best available place name
+    # may be city, state, or both depending on the API
+    # useful for Google Maps route url generation
+    place_name: str
     place_id: str
     location: LatLng
-
-    @field_validator("id", mode="before")
-    @classmethod
-    def parse_id(cls, v: int | str) -> str:  # noqa: D102
-        return str(v)
 
 
 class Venues(ExtraFrozenModel):  # noqa: D101
@@ -48,11 +42,11 @@ class Event(ExtraFrozenModel):  # noqa: D101
     # where event IDs are numerical but may contain leading zeros
     id: str
     time: datetime
-    venue_id: str
-    home_team_id: str
-    away_team_id: str
+    venue: Venue
+    home_team: Team
+    away_team: Team
 
-    @field_validator("id", "home_team_id", "away_team_id", mode="before")
+    @field_validator("id", mode="before")
     @classmethod
     def parse_id(cls, v: int | str) -> str:  # noqa: D102
         return str(v)

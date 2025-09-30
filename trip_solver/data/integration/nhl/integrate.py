@@ -2,7 +2,6 @@
 
 import logging
 from datetime import date, datetime
-from itertools import starmap
 from pathlib import Path
 
 from trip_solver.data.api.nhl.schedule import NHLSchedule
@@ -22,8 +21,8 @@ def format_team_name(team: NHLScheduleTeam) -> str:  # noqa: D103
     return f"{team.placeName.default} {team.commonName.default}"
 
 
-def get_arena_full_name(game: NHLScheduleGame) -> str:  # noqa: D103
-    return f"{game.venue.default}, {game.homeTeam.placeName.default}"
+def get_venue_name_info(game: NHLScheduleGame) -> tuple[str, str]:  # noqa: D103
+    return game.venue.default, game.homeTeam.placeName.default
 
 
 def determine_game_eligibility(game: NHLScheduleGame) -> bool:  # noqa: D103
@@ -47,7 +46,7 @@ if __name__ == "__main__":
             nhl_games.extend(game_day.games)
         next_start_date = game_week.nextStartDate
 
-    arena_ids: dict[str, str] = {}
+    venue_ids: dict[tuple[str, str], int] = {}
     unique_teams: set[tuple[int, str]] = set()
 
     for game in nhl_games:
@@ -55,22 +54,34 @@ if __name__ == "__main__":
         # no good automated way to detect such special cases
         # there is a neutralSite attribute but using that also discards special
         # exhibition series and outdoor games etc.
-        if game.venue.default not in arena_ids and determine_game_eligibility(game):
-            arena_ids[game.venue.default] = str(len(arena_ids) + 1)
+        if get_venue_name_info(game) not in venue_ids and determine_game_eligibility(game):
+            venue_ids[get_venue_name_info(game)] = len(venue_ids) + 1
         unique_teams.add((game.homeTeam.id, format_team_name(game.homeTeam)))
         unique_teams.add((game.awayTeam.id, format_team_name(game.awayTeam)))
 
-    teams = Teams(teams=[Team(id=id_, name=name) for id_, name in unique_teams])
-    venues = Venues(venues=list(starmap(get_venue_info, arena_ids.items())))
+    teams = Teams(teams=[Team(id=id_, name=name) for id_, name in sorted(unique_teams)])
+    team_index = {team.id: team for team in teams.teams}
+
+    venues = Venues(
+        venues=[
+            get_venue_info(venue_name, venue_place_name, venue_id)
+            for (venue_name, venue_place_name), venue_id in sorted(
+                venue_ids.items(),
+                key=lambda x: x[1],  # noqa: FURB118 preference
+            )
+        ],
+    )
     logger.info("Finished pinging Places API.")
+    venue_index = {venue.name: venue for venue in venues.venues}
+
     events = Events(
         events=[
             Event(
                 id=game.id,
                 time=datetime.fromisoformat(game.startTimeUTC),
-                venue_id=arena_ids[game.venue.default],
-                home_team_id=game.homeTeam.id,
-                away_team_id=game.awayTeam.id,
+                venue=venue_index[game.venue.default],
+                home_team=team_index[game.homeTeam.id],
+                away_team=team_index[game.awayTeam.id],
             )
             for game in nhl_games
             if determine_game_eligibility(game)

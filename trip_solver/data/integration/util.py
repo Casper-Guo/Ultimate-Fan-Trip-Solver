@@ -12,25 +12,28 @@ logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(m
 logger = logging.getLogger(__name__)
 
 
-def get_venue_info(venue_full_name: str, venue_id: int | str) -> Venue:
+def get_venue_info(venue_name: str, venue_place_name: str, venue_id: int | str) -> Venue:
     """Format the response from the Google Maps Places API."""
     try:
         response = (
             TextSearch()
             .post_for_data(
-                request_body=TextSearchRequestBody(textQuery=venue_full_name),
+                request_body=TextSearchRequestBody(
+                    textQuery=f"{venue_name}, {venue_place_name}",
+                ),
             )
             .places[0]
         )
     except ValidationError:
-        logger.exception("No matching places for %s", venue_full_name)
+        logger.exception("No matching places for %s", venue_name)
         raise
 
     return Venue(
         # save the name without the city and state
-        name=venue_full_name.split(",", maxsplit=1)[0],
+        name=venue_name,
         id=venue_id,
         address=response.formattedAddress,
+        place_name=venue_place_name,
         place_id=response.id,
         location=response.location,
     )

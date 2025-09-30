@@ -1,7 +1,6 @@
 """Produce NBA season team, venue, and schedule metadata."""
 
 import logging
-from itertools import starmap
 from pathlib import Path
 
 from trip_solver.data.api.nba.schedule import NBASchedule
@@ -13,13 +12,13 @@ logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(m
 logger = logging.getLogger(__name__)
 
 
-def format_team_info(team: NBATeam) -> tuple[str, str]:  # noqa: D103
-    return str(team.teamId), f"{team.teamCity} {team.teamName}"
+def format_team_info(team: NBATeam) -> tuple[int, str]:  # noqa: D103
+    return team.teamId, f"{team.teamCity} {team.teamName}"
 
 
-def get_arena_full_name(game: NBAGame) -> str:
-    """Get the full name of an NBA arena."""
-    return f"{game.arenaName}, {game.arenaCity} {game.arenaState}"
+def get_venue_name_info(game: NBAGame) -> tuple[str, str]:
+    """Get NBA venue name and venue place name."""
+    return game.arenaName, f"{game.arenaCity} {game.arenaState}"
 
 
 def determine_game_eligibility(game: NBAGame) -> bool:
@@ -34,32 +33,43 @@ def determine_game_eligibility(game: NBAGame) -> bool:
 if __name__ == "__main__":
     nba_schedule = NBASchedule().get_data()
 
-    # NBA API does not provide an arena ID, so we create it ourselves
-    arena_ids: dict[str, str] = {}
-    unique_teams: set[tuple[str, str]] = set()
+    # NBA API does not provide an venue ID, so we create it ourselves
+    venue_ids: dict[tuple[str, str], int] = {}
+    unique_teams: set[tuple[int, str]] = set()
 
     for game_date in nba_schedule.leagueSchedule.gameDates:
         for game in game_date.games:
             # only include regular season games in north America with known participants
-            # An arena in Mexico is included because it has a state specified as MX
+            # An venue in Mexico is included because it has a state specified as MX
             if determine_game_eligibility(game):
-                if (arena_full_name := get_arena_full_name(game)) not in arena_ids:
-                    arena_ids[arena_full_name] = str(len(arena_ids) + 1)
+                if (venue_full_name := get_venue_name_info(game)) not in venue_ids:
+                    venue_ids[venue_full_name] = len(venue_ids) + 1
                 unique_teams.add(format_team_info(game.homeTeam))
                 unique_teams.add(format_team_info(game.awayTeam))
 
-    teams = Teams(teams=[Team(id=id_, name=name) for id_, name in unique_teams])
-    venues = Venues(venues=list(starmap(get_venue_info, arena_ids.items())))
+    teams = Teams(teams=[Team(id=id_, name=name) for id_, name in sorted(unique_teams)])
+    team_index = {team.id: team for team in teams.teams}
+
+    venues = Venues(
+        venues=[
+            get_venue_info(venue_name, venue_place_name, venue_id)
+            for (venue_name, venue_place_name), venue_id in sorted(
+                venue_ids.items(),
+                key=lambda x: x[1],  # noqa: FURB118 preference
+            )
+        ],
+    )
     logger.info("Finished pinging Places API.")
+    venue_index = {venue.name: venue for venue in venues.venues}
 
     events = Events(
         events=[
             Event(
                 id=game.gameId,
                 time=game.gameDateTimeUTC,
-                venue_id=arena_ids[get_arena_full_name(game)],
-                home_team_id=game.homeTeam.teamId,
-                away_team_id=game.awayTeam.teamId,
+                venue=venue_index[game.arenaName],
+                home_team=team_index[game.homeTeam.teamId],
+                away_team=team_index[game.awayTeam.teamId],
             )
             for game_date in nba_schedule.leagueSchedule.gameDates
             for game in game_date.games
