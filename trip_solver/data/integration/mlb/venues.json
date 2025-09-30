@@ -1,0 +1,345 @@
+{
+  "venues": [
+    {
+      "name": "Angel Stadium",
+      "id": 1,
+      "address": "2000 E Gene Autry Way, Anaheim, CA 92806, USA",
+      "place_name": "Anaheim",
+      "place_id": "ChIJHbA-iJzX3IARembDUOvijy0",
+      "location": {
+        "latitude": 33.7998135,
+        "longitude": -117.88241620000001
+      }
+    },
+    {
+      "name": "Oriole Park at Camden Yards",
+      "id": 2,
+      "address": "333 W Camden St, Baltimore, MD 21201, USA",
+      "place_name": "Baltimore",
+      "place_id": "ChIJB1dGL1wDyIkROcWXAz_ZKCQ",
+      "location": {
+        "latitude": 39.283819400000006,
+        "longitude": -76.62167819999999
+      }
+    },
+    {
+      "name": "Fenway Park",
+      "id": 3,
+      "address": "4 Jersey St, Boston, MA 02215, USA",
+      "place_name": "Boston",
+      "place_id": "ChIJbz8lP_Z544kRBFV6ZMsNgKI",
+      "location": {
+        "latitude": 42.3466764,
+        "longitude": -71.0972178
+      }
+    },
+    {
+      "name": "Rate Field",
+      "id": 4,
+      "address": "333 W 35th St, Chicago, IL 60616, USA",
+      "place_name": "Chicago",
+      "place_id": "ChIJ9ZKOJxQsDogRuJBKj2ZPhi8",
+      "location": {
+        "latitude": 41.829884899999996,
+        "longitude": -87.63366769999999
+      }
+    },
+    {
+      "name": "Progressive Field",
+      "id": 5,
+      "address": "2401 Ontario St, Cleveland, OH 44115, USA",
+      "place_name": "Cleveland",
+      "place_id": "ChIJ7fYQtob6MIgRhTPPwA213FI",
+      "location": {
+        "latitude": 41.4958921,
+        "longitude": -81.6852949
+      }
+    },
+    {
+      "name": "Kauffman Stadium",
+      "id": 7,
+      "address": "1 Royal Way, Kansas City, MO 64129, USA",
+      "place_name": "Kansas City",
+      "place_id": "ChIJcaDcmaDkwIcRkMbgP_faleU",
+      "location": {
+        "latitude": 39.0514836,
+        "longitude": -94.480493
+      }
+    },
+    {
+      "name": "Rogers Centre",
+      "id": 14,
+      "address": "1 Blue Jays Way, Toronto, ON M5V 1J4, Canada",
+      "place_name": "Toronto",
+      "place_id": "ChIJlUO6SQA1K4gRTfdt5_K6zu8",
+      "location": {
+        "latitude": 43.642270499999995,
+        "longitude": -79.3901667
+      }
+    },
+    {
+      "name": "Chase Field",
+      "id": 15,
+      "address": "401 E Jefferson St, Phoenix, AZ 85004, USA",
+      "place_name": "Phoenix",
+      "place_id": "ChIJ8V7j8_URK4cRXmKhO0s0OGY",
+      "location": {
+        "latitude": 33.4453344,
+        "longitude": -112.0667091
+      }
+    },
+    {
+      "name": "Wrigley Field",
+      "id": 17,
+      "address": "1060 W Addison St, Chicago, IL 60613, USA",
+      "place_name": "Chicago",
+      "place_id": "ChIJId-a5bLTD4gRRtbdduE-6hw",
+      "location": {
+        "latitude": 41.9484384,
+        "longitude": -87.6553327
+      }
+    },
+    {
+      "name": "Coors Field",
+      "id": 19,
+      "address": "2001 Blake St, Denver, CO 80205, USA",
+      "place_name": "Denver",
+      "place_id": "ChIJVV75VNx4bIcR3tkU4SjDHBc",
+      "location": {
+        "latitude": 39.7561077,
+        "longitude": -104.9941676
+      }
+    },
+    {
+      "name": "Dodger Stadium",
+      "id": 22,
+      "address": "1000 Vin Scully Ave, Los Angeles, CA 90012, USA",
+      "place_name": "Los Angeles",
+      "place_id": "ChIJdVYAVPnGwoAR3wmcg09VlJ4",
+      "location": {
+        "latitude": 34.073851,
+        "longitude": -118.2399583
+      }
+    },
+    {
+      "name": "PNC Park",
+      "id": 31,
+      "address": "115 Federal St, Pittsburgh, PA 15212, USA",
+      "place_name": "Pittsburgh",
+      "place_id": "ChIJdZvdU_7zNIgRGSPAei2BAbo",
+      "location": {
+        "latitude": 40.4474692,
+        "longitude": -80.0071603
+      }
+    },
+    {
+      "name": "American Family Field",
+      "id": 32,
+      "address": "1 Brewers Way, Milwaukee, WI 53214, USA",
+      "place_name": "Milwaukee",
+      "place_id": "ChIJ9XP-qlkaBYgRtNBQlN5HtME",
+      "location": {
+        "latitude": 43.0282068,
+        "longitude": -87.97126759999999
+      }
+    },
+    {
+      "name": "T-Mobile Park",
+      "id": 680,
+      "address": "1250 1st Ave S, Seattle, WA 98134, USA",
+      "place_name": "Seattle",
+      "place_id": "ChIJ28RdUJ9qkFQRlf2mprMp-MY",
+      "location": {
+        "latitude": 47.591471999999996,
+        "longitude": -122.3325833
+      }
+    },
+    {
+      "name": "Daikin Park",
+      "id": 2392,
+      "address": "501 Crawford St, Houston, TX 77002, USA",
+      "place_name": "Houston",
+      "place_id": "ChIJkUJ52ya_QIYR4RcaJ2Z_RYE",
+      "location": {
+        "latitude": 29.7572014,
+        "longitude": -95.35525
+      }
+    },
+    {
+      "name": "Comerica Park",
+      "id": 2394,
+      "address": "2100 Woodward Ave, Detroit, MI 48201, USA",
+      "place_name": "Detroit",
+      "place_id": "ChIJX0K0mzMtO4gRXpDZC0HNsqg",
+      "location": {
+        "latitude": 42.3393053,
+        "longitude": -83.0488724
+      }
+    },
+    {
+      "name": "Oracle Park",
+      "id": 2395,
+      "address": "24 Willie Mays Plaza, San Francisco, CA 94107, USA",
+      "place_name": "San Francisco",
+      "place_id": "ChIJ_T25cNd_j4ARehGmHe0pT84",
+      "location": {
+        "latitude": 37.7784136,
+        "longitude": -122.38921680000001
+      }
+    },
+    {
+      "name": "George M. Steinbrenner Field",
+      "id": 2523,
+      "address": "1 Steinbrenner Dr, Tampa, FL 33614, USA",
+      "place_name": "Tampa",
+      "place_id": "ChIJKwWA3sfDwogRw2ERUbKhY9k",
+      "location": {
+        "latitude": 27.9802656,
+        "longitude": -82.50640729999999
+      }
+    },
+    {
+      "name": "Sutter Health Park",
+      "id": 2529,
+      "address": "400 Ballpark Dr, West Sacramento, CA 95691, USA",
+      "place_name": "Sacramento",
+      "place_id": "ChIJnalemcrWmoAR7zShF5M2xyU",
+      "location": {
+        "latitude": 38.5798114,
+        "longitude": -121.5147519
+      }
+    },
+    {
+      "name": "Great American Ball Park",
+      "id": 2602,
+      "address": "100 Joe Nuxhall Wy, Cincinnati, OH 45202, USA",
+      "place_name": "Cincinnati",
+      "place_id": "ChIJLwacWEOxQYgRcu3UJQuLYwc",
+      "location": {
+        "latitude": 39.097380799999996,
+        "longitude": -84.5070671
+      }
+    },
+    {
+      "name": "Petco Park",
+      "id": 2680,
+      "address": "100 Park Blvd, San Diego, CA 92101, USA",
+      "place_name": "San Diego",
+      "place_id": "ChIJ7fMsvKtU2YARXM4yStBv8rU",
+      "location": {
+        "latitude": 32.7075941,
+        "longitude": -117.15704219999999
+      }
+    },
+    {
+      "name": "Citizens Bank Park",
+      "id": 2681,
+      "address": "1 Citizens Bank Way, Philadelphia, PA 19148, USA",
+      "place_name": "Philadelphia",
+      "place_id": "ChIJOetvJu7FxokR-jV1vd4SAgk",
+      "location": {
+        "latitude": 39.9060572,
+        "longitude": -75.1664952
+      }
+    },
+    {
+      "name": "Busch Stadium",
+      "id": 2889,
+      "address": "700 Clark Ave, St. Louis, MO 63102, USA",
+      "place_name": "St. Louis",
+      "place_id": "ChIJF88LRBuz2IcRJ59Q49dieaU",
+      "location": {
+        "latitude": 38.6226188,
+        "longitude": -90.1928209
+      }
+    },
+    {
+      "name": "Citi Field",
+      "id": 3289,
+      "address": "41 Seaver Wy, Flushing, NY 11368, USA",
+      "place_name": "Flushing",
+      "place_id": "ChIJldFHseBfwokRO3aZ8NSVW_U",
+      "location": {
+        "latitude": 40.7570024,
+        "longitude": -73.84590840000001
+      }
+    },
+    {
+      "name": "Nationals Park",
+      "id": 3309,
+      "address": "1500 South Capitol St SE, Washington, DC 20003, USA",
+      "place_name": "Washington",
+      "place_id": "ChIJY-tjeNe5t4kRi21OlcX5-mA",
+      "location": {
+        "latitude": 38.873010199999996,
+        "longitude": -77.0074329
+      }
+    },
+    {
+      "name": "Target Field",
+      "id": 3312,
+      "address": "1 Twins Way, Minneapolis, MN 55403, USA",
+      "place_name": "Minneapolis",
+      "place_id": "ChIJJYc87o0ys1IRVcUvE2JZ4uQ",
+      "location": {
+        "latitude": 44.981742999999994,
+        "longitude": -93.27762919999999
+      }
+    },
+    {
+      "name": "Yankee Stadium",
+      "id": 3313,
+      "address": "1 E 161st St, Bronx, NY 10451, USA",
+      "place_name": "Bronx",
+      "place_id": "ChIJcWnnWiz0wokRCB6aVdnDQEk",
+      "location": {
+        "latitude": 40.8296426,
+        "longitude": -73.9261745
+      }
+    },
+    {
+      "name": "loanDepot park",
+      "id": 4169,
+      "address": "501 Marlins Way, Miami, FL 33125, USA",
+      "place_name": "Miami",
+      "place_id": "ChIJT6FDlOi22YgRho4_rKhVv3c",
+      "location": {
+        "latitude": 25.7781487,
+        "longitude": -80.2195998
+      }
+    },
+    {
+      "name": "Truist Park",
+      "id": 4705,
+      "address": "755 Battery Ave SE, Atlanta, GA 30339, USA",
+      "place_name": "Atlanta",
+      "place_id": "ChIJu8YN0E0Q9YgR1bwdTTJxSNA",
+      "location": {
+        "latitude": 33.8909516,
+        "longitude": -84.4682886
+      }
+    },
+    {
+      "name": "Globe Life Field",
+      "id": 5325,
+      "address": "734 Stadium Dr, Arlington, TX 76011, USA",
+      "place_name": "Arlington",
+      "place_id": "ChIJKzjlim6HToYRm7CjYlFnXiA",
+      "location": {
+        "latitude": 32.746881,
+        "longitude": -97.0831551
+      }
+    },
+    {
+      "name": "Las Vegas Ballpark",
+      "id": 5355,
+      "address": "1650 S Pavilion Center Dr, Las Vegas, NV 89135, USA",
+      "place_name": "Las Vegas",
+      "place_id": "ChIJbRZyu0a_yIARg2HFjvDfXe4",
+      "location": {
+        "latitude": 36.1528078,
+        "longitude": -115.3296762
+      }
+    }
+  ]
+}

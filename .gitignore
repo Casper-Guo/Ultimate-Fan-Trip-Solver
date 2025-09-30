@@ -1,4 +1,6 @@
-*.json
+*.ipynb
+
+raw*.json
 
 # test files
 test.py

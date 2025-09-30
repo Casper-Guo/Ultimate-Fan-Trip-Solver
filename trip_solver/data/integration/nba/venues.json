@@ -1,0 +1,356 @@
+{
+  "venues": [
+    {
+      "name": "Paycom Center",
+      "id": 1,
+      "address": "100 W Reno Ave, Oklahoma City, OK 73102, USA",
+      "place_name": "Oklahoma City OK",
+      "place_id": "ChIJmW2-HCgXsocRRZQdZbReN6U",
+      "location": {
+        "latitude": 35.4634247,
+        "longitude": -97.5151138
+      }
+    },
+    {
+      "name": "Crypto.com Arena",
+      "id": 2,
+      "address": "1111 S Figueroa St, Los Angeles, CA 90015, USA",
+      "place_name": "Los Angeles CA",
+      "place_id": "ChIJkyrqXbjHwoAR1bJ76zx89B8",
+      "location": {
+        "latitude": 34.0430175,
+        "longitude": -118.2672541
+      }
+    },
+    {
+      "name": "Madison Square Garden",
+      "id": 3,
+      "address": "New York, NY 10001, USA",
+      "place_name": "New York NY",
+      "place_id": "ChIJhRwB-yFawokR5Phil-QQ3zM",
+      "location": {
+        "latitude": 40.7505045,
+        "longitude": -73.9934387
+      }
+    },
+    {
+      "name": "American Airlines Center",
+      "id": 4,
+      "address": "2500 Victory Ave, Dallas, TX 75219, USA",
+      "place_name": "Dallas TX",
+      "place_id": "ChIJr-XOXC-ZToYRow-GKE8dYSE",
+      "location": {
+        "latitude": 32.7903908,
+        "longitude": -96.8102547
+      }
+    },
+    {
+      "name": "Spectrum Center",
+      "id": 5,
+      "address": "333 E Trade St, Charlotte, NC 28202, USA",
+      "place_name": "Charlotte NC",
+      "place_id": "ChIJRX2cPiSgVogR-j4piI0LI3Y",
+      "location": {
+        "latitude": 35.2251952,
+        "longitude": -80.8393468
+      }
+    },
+    {
+      "name": "Kia Center",
+      "id": 6,
+      "address": "400 W Church St, Orlando, FL 32801, USA",
+      "place_name": "Orlando FL",
+      "place_id": "ChIJVcr7Ufp654gRkJGTJZILyfc",
+      "location": {
+        "latitude": 28.5392214,
+        "longitude": -81.3838535
+      }
+    },
+    {
+      "name": "State Farm Arena",
+      "id": 7,
+      "address": "1 State Farm Dr, Atlanta, GA 30303, USA",
+      "place_name": "Atlanta GA",
+      "place_id": "ChIJbUlCkX8D9YgR-18nztzVYLA",
+      "location": {
+        "latitude": 33.7574062,
+        "longitude": -84.396233
+      }
+    },
+    {
+      "name": "TD Garden",
+      "id": 8,
+      "address": "100 Legends Way, Boston, MA 02114, USA",
+      "place_name": "Boston MA",
+      "place_id": "ChIJywUtFo5w44kRqJfXXv410zI",
+      "location": {
+        "latitude": 42.366198,
+        "longitude": -71.062146
+      }
+    },
+    {
+      "name": "United Center",
+      "id": 9,
+      "address": "1901 W Madison St, Chicago, IL 60612, USA",
+      "place_name": "Chicago IL",
+      "place_id": "ChIJT7Wpyj4tDogRRAPwjAbwk5s",
+      "location": {
+        "latitude": 41.880690799999996,
+        "longitude": -87.6741759
+      }
+    },
+    {
+      "name": "FedExForum",
+      "id": 10,
+      "address": "191 Beale St, Memphis, TN 38103, USA",
+      "place_name": "Memphis TN",
+      "place_id": "ChIJKbZbNJd-1YcRTnyLWzHLL9U",
+      "location": {
+        "latitude": 35.1381418,
+        "longitude": -90.0505864
+      }
+    },
+    {
+      "name": "Fiserv Forum",
+      "id": 11,
+      "address": "1111 N Vel R. Phillips Ave, Milwaukee, WI 53203, USA",
+      "place_name": "Milwaukee WI",
+      "place_id": "ChIJcT3-inQZBYgRu3myuupgryA",
+      "location": {
+        "latitude": 43.0450802,
+        "longitude": -87.9173862
+      }
+    },
+    {
+      "name": "Delta Center",
+      "id": 12,
+      "address": "301 S Temple, Salt Lake City, UT 84101, USA",
+      "place_name": "Salt Lake City UT",
+      "place_id": "ChIJTfDrAwH1UocRILERH1NF5fA",
+      "location": {
+        "latitude": 40.7682681,
+        "longitude": -111.9010874
+      }
+    },
+    {
+      "name": "PHX Arena",
+      "id": 13,
+      "address": "201 E Jefferson St, Phoenix, AZ 85004, USA",
+      "place_name": "Phoenix AZ",
+      "place_id": "ChIJb8ZIz2wVK4cRWyS_4pQPIno",
+      "location": {
+        "latitude": 33.445737,
+        "longitude": -112.0712003
+      }
+    },
+    {
+      "name": "Moda Center",
+      "id": 14,
+      "address": "1 N Center Ct St, Portland, OR 97227, USA",
+      "place_name": "Portland OR",
+      "place_id": "ChIJvfIK2VKnlVQRp8nAsCikTaw",
+      "location": {
+        "latitude": 45.531565099999995,
+        "longitude": -122.6668423
+      }
+    },
+    {
+      "name": "Gainbridge Fieldhouse",
+      "id": 15,
+      "address": "125 S Pennsylvania St, Indianapolis, IN 46204, USA",
+      "place_name": "Indianapolis IN",
+      "place_id": "ChIJPwuFQL1Qa4gRPUecZVgBGPQ",
+      "location": {
+        "latitude": 39.7640434,
+        "longitude": -86.1555367
+      }
+    },
+    {
+      "name": "Chase Center",
+      "id": 16,
+      "address": "1 Warriors Way, San Francisco, CA 94158, USA",
+      "place_name": "San Francisco CA",
+      "place_id": "ChIJ6QBEf8Z_j4AR40Gh2OOTZ30",
+      "location": {
+        "latitude": 37.7680183,
+        "longitude": -122.38787719999999
+      }
+    },
+    {
+      "name": "Barclays Center",
+      "id": 17,
+      "address": "620 Atlantic Ave, Brooklyn, NY 11217, USA",
+      "place_name": "Brooklyn NY",
+      "place_id": "ChIJo3lEaa5bwokRnuZS2oWTlLk",
+      "location": {
+        "latitude": 40.6826465,
+        "longitude": -73.97541559999999
+      }
+    },
+    {
+      "name": "Scotiabank Arena",
+      "id": 18,
+      "address": "40 Bay St., Toronto, ON M5J 3A5, Canada",
+      "place_name": "Toronto ON",
+      "place_id": "ChIJCb81WSvL1IkREJRm1efQQlg",
+      "location": {
+        "latitude": 43.6434661,
+        "longitude": -79.3790989
+      }
+    },
+    {
+      "name": "Toyota Center",
+      "id": 19,
+      "address": "1510 Polk St, Houston, TX 77002, USA",
+      "place_name": "Houston TX",
+      "place_id": "ChIJM60VYOW-QIYRi7qVEstsO0s",
+      "location": {
+        "latitude": 29.750921299999998,
+        "longitude": -95.3622173
+      }
+    },
+    {
+      "name": "Smoothie King Center",
+      "id": 20,
+      "address": "1501 Dave Dixon Dr Space 101-102, New Orleans, LA 70113, USA",
+      "place_name": "New Orleans LA",
+      "place_id": "ChIJcaLF292lIIYRb-qn4OXtclU",
+      "location": {
+        "latitude": 29.9490351,
+        "longitude": -90.08205679999999
+      }
+    },
+    {
+      "name": "Golden 1 Center",
+      "id": 21,
+      "address": "500 David J Stern Walk, Sacramento, CA 95814, USA",
+      "place_name": "Sacramento CA",
+      "place_id": "ChIJvxlrBLxM6IARpi8EH3FTfJg",
+      "location": {
+        "latitude": 38.5802045,
+        "longitude": -121.4996602
+      }
+    },
+    {
+      "name": "Intuit Dome",
+      "id": 22,
+      "address": "3930 W Century Blvd, Inglewood, CA 90303, USA",
+      "place_name": "Inglewood CA",
+      "place_id": "ChIJ24QXI963woARVyI650iw2oc",
+      "location": {
+        "latitude": 33.9437983,
+        "longitude": -118.3421771
+      }
+    },
+    {
+      "name": "Xfinity Mobile Arena",
+      "id": 23,
+      "address": "3601 S Broad St, Philadelphia, PA 19148, USA",
+      "place_name": "Philadelphia PA",
+      "place_id": "ChIJR7HjD-zFxokRLbpFP7Ixn1I",
+      "location": {
+        "latitude": 39.9012015,
+        "longitude": -75.17197949999999
+      }
+    },
+    {
+      "name": "Ball Arena",
+      "id": 24,
+      "address": "1000 Chopper Cir, Denver, CO 80204, USA",
+      "place_name": "Denver CO",
+      "place_id": "ChIJd3toZrh4bIcRhnfUNzcn7Hs",
+      "location": {
+        "latitude": 39.7486519,
+        "longitude": -105.0075988
+      }
+    },
+    {
+      "name": "Frost Bank Center",
+      "id": 25,
+      "address": "1 Frost Bank Center Dr, San Antonio, TX 78219, USA",
+      "place_name": "San Antonio TX",
+      "place_id": "ChIJNeOQtIH2XIYRpOCYK8zB06o",
+      "location": {
+        "latitude": 29.427020100000004,
+        "longitude": -98.43746519999999
+      }
+    },
+    {
+      "name": "Little Caesars Arena",
+      "id": 26,
+      "address": "2645 Woodward Ave, Detroit, MI 48201, USA",
+      "place_name": "Detroit MI",
+      "place_id": "ChIJCxS_IcvSJIgReEafl2DYD8s",
+      "location": {
+        "latitude": 42.341795999999995,
+        "longitude": -83.05466109999999
+      }
+    },
+    {
+      "name": "Rocket Arena",
+      "id": 27,
+      "address": "1 Center Court, Cleveland, OH 44115, USA",
+      "place_name": "Cleveland OH",
+      "place_id": "ChIJtZl8uoH6MIgRIJlSUVz--lM",
+      "location": {
+        "latitude": 41.4965474,
+        "longitude": -81.68805739999999
+      }
+    },
+    {
+      "name": "Kaseya Center",
+      "id": 28,
+      "address": "601 Biscayne Blvd, Miami, FL 33132, USA",
+      "place_name": "Miami FL",
+      "place_id": "ChIJlZFyCaC22YgRbFtPKFIFrRM",
+      "location": {
+        "latitude": 25.7814014,
+        "longitude": -80.18696899999999
+      }
+    },
+    {
+      "name": "Capital One Arena",
+      "id": 29,
+      "address": "601 F St NW, Washington, DC 20004, USA",
+      "place_name": "Washington DC",
+      "place_id": "ChIJc2hfT463t4kREfcRHtsEzHU",
+      "location": {
+        "latitude": 38.8981675,
+        "longitude": -77.02085679999999
+      }
+    },
+    {
+      "name": "Target Center",
+      "id": 30,
+      "address": "600 N 1st Ave, Minneapolis, MN 55403, USA",
+      "place_name": "Minneapolis MN",
+      "place_id": "ChIJe1j2u5Eys1IR7I-ZF9E9Xdg",
+      "location": {
+        "latitude": 44.9794633,
+        "longitude": -93.2760947
+      }
+    },
+    {
+      "name": "Arena CDMX",
+      "id": 31,
+      "address": "Av. de las Granjas 800, Santa Barbara, Azcapotzalco, 02230 Ciudad de México, CDMX, Mexico",
+      "place_name": "Mexico City MX",
+      "place_id": "ChIJQf8SLon40YUR_LleMBmmhxs",
+      "location": {
+        "latitude": 19.497719999999997,
+        "longitude": -99.17513799999999
+      }
+    },
+    {
+      "name": "Moody Center",
+      "id": 32,
+      "address": "2001 Robert Dedman Dr, Austin, TX 78712, USA",
+      "place_name": "Austin TX",
+      "place_id": "ChIJFyXMCz21RIYRFA1vxCkln0I",
+      "location": {
+        "latitude": 30.280969900000002,
+        "longitude": -97.7306618
+      }
+    }
+  ]
+}
