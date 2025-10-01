@@ -1,5 +1,6 @@
 """Produce NHL season team, venue, and schedule metadata."""
 
+import json
 import logging
 from datetime import date, datetime
 from pathlib import Path
@@ -12,6 +13,7 @@ from trip_solver.models.api.nhl.schedule import (
     NHLScheduleTeam,
 )
 from trip_solver.models.internal import Event, Events, Team, Teams, Venues
+from trip_solver.util.cost_matrix import compute_cost_matrix
 
 logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
@@ -71,8 +73,8 @@ if __name__ == "__main__":
             )
         ],
     )
-    logger.info("Finished pinging Places API.")
     venue_index = {venue.name: venue for venue in venues.venues}
+    distance_matrix, duration_matrix = compute_cost_matrix(venues=venues)
 
     events = Events(
         events=[
@@ -91,4 +93,6 @@ if __name__ == "__main__":
     directory = Path(__file__).parent
     (directory / "teams.json").write_text(teams.model_dump_json(indent=2))
     (directory / "venues.json").write_text(venues.model_dump_json(indent=2))
+    (directory / "distance_matrix.json").write_text(json.dumps(distance_matrix, indent=2))
+    (directory / "duration_matrix.json").write_text(json.dumps(duration_matrix, indent=2))
     (directory / "events.json").write_text(events.model_dump_json(indent=2))

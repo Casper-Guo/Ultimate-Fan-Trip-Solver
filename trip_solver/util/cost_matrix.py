@@ -129,7 +129,7 @@ def compute_driving_cost_matrix(venues: Venues) -> tuple[CostMatrix, CostMatrix]
                 venues.venues[destination_index].id
             ] = element.staticDuration
 
-    return distance_matrix, duration_matrix
+    return distance_matrix, duration_matrix  # type: ignore[return-value] compatible subtype
 
 
 def utc_to_eastern(dt: datetime) -> datetime:
@@ -162,7 +162,7 @@ def compute_total_duration_matrix(events: Events) -> CostMatrix:
 
         cost_matrix[event_1.id][event_2.id] = (time_2.date() - time_1.date()).days
 
-    return cost_matrix
+    return cost_matrix  # type: ignore[return-value] compatible subtype
 
 
 def compute_cost_matrix(
@@ -187,3 +187,13 @@ def compute_cost_matrix(
             return compute_total_duration_matrix(events)
         case _:
             raise ValueError(f"Unknown cost measure: {measure}")
+
+
+def convert_cost_matrix_str_keys(matrix: dict[str, dict[str, int]]) -> CostMatrix:
+    """Recover integer cost matrix keys that are converted to strs when dumped to JSON."""
+    converted_matrix: CostMatrix = {}
+    for key, value in matrix.items():
+        converted_matrix[int(key)] = {
+            int(inner_key): inner_val for inner_key, inner_val in value.items()
+        }
+    return converted_matrix
