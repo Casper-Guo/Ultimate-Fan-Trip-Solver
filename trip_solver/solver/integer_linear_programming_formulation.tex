@@ -24,6 +24,8 @@ Define $\mathbf{C}_{n_e \times n_e}$ to be the cost matrix according to some mea
 
 Define $\mathbf{M}_{n_e \times n_t}$ to be the matchup matrix where $M_{ij} = 1$ if team $t_j$ participates in event $i$ and 0 otherwise. Note that this matrix is very sparse (with density equal to $1/n_t$) since each row, representing a single event, will involve exactly one team and thus have exactly one entry equal to 1. This matrix is so defined under the assumption that a fan requires that his own team to be playing in the game, thus only distinguishing the opposing team is necessary. Additionally define $M_{0j} = 0 \; \forall j$ to represent the dummy event.
 
+Note that if, instead of optimizing for a set of teams one wishes to see, we instead optimize for a set of venues one wishes to visit, we can define a venue matrix $\mathbf{V}$ exactly analogous to $\mathbf{M}$ and all subsequent derivations apply similarly.
+
 \section{Variables}
 Define variables $x_{ij} \in \{0, 1\}$ for all $0 \leq i \leq n_e$ and $0 \leq j \leq n_e$ if and only if it is feasible to travel directly from event $e_i$ to event $e_j$ (i.e., $j > i$ or $j = 0$). The variable $x_{ij}$ is 1 if one travels directly from event $e_i$ to event $e_j$ and 0 otherwise. The subset of the variables between non-dummy events can also be represented as a matrix $\mathbf{X}_{n_e \times n_e}$.
 
@@ -119,6 +121,11 @@ We want for any unvisited event $e_i$ to have $u_i = 0$. This constraint is actu
 Consider any fixed $i, j$ where $j \neq 0$, there is exactly one $k$ such that $M_{jk} = 1$. Thus constraint \eqref{constr:teams} implies that there is exactly $n_t$ non-zero $x_{ij}$ variables where $j \geq 1$, corresponding to the $n_t$ non-dummy events visited. Then constraint \eqref{constr:end} provides that there is exactly 1 non-zero $x_{i0}$. So in total we have exactly $n_t + 1$ non-zero $x_{ij}$ variables.
 
 Each non-zero $x_{ij}$ variable correspond to some value of $u_i$ and we therefore have at least $n_t + 1$ non-zero $u_i$ variables. Constraint \eqref{constr:order} provides that the absolute difference between any two of these variables is at least 1 and constraint \eqref{constr:u} provides that they range between 1 and $n_t + 1$. Thus these $n_t + 1$ variables must be exactly the integers between 1 and $n_t + 1$ and there can be no other non-zero $u_i$ variables.
+
+\section{Limitations}
+The major limitation of this formulation is that the visit order variables imply \emph{a priori} knowledge of the number of events $\hat{n}_e$ in the optimal tour. In the cases of seeing one fixed team play against a set of teams or visiting a set of venues, $\hat{n}_e$ is trivially equal to the number of teams or number of venues respectively under any nonnegative cost function. This is because that the cost of the optimal satisfying tour is monotonically increasing with respect to the number of events visited. As an aside, the latter inquiry is much more computationally intensive than the former, given that the number of candidate events is much larger.
+
+This formulation thus cannot answer some other reasonable questions, such as the optimal way to watch a set of teams. In this scenario, it is not necessarily optimal to require that every event attended involves two previously unseen teams. So $\hat{n}_e$ is not known \emph{a priori} and the order variables cannot be defined.
 
 \section{Conclusion}
 We have constructed an integer program that is a modified version of the MTZ formulation for TSP. This program has roughly $n_e^2 / 2 + n_e$ binary variables and roughly $n_e^2 + 3n_e + n_t$ constraints.
