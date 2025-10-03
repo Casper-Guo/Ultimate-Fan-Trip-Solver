@@ -52,7 +52,7 @@ Constraints for the range of variables:
 The visit order variables can be modelled as continuous variables to improve solver performance, although in practice they will be almost equal to integers once optimized.
 
 \begin{equation} \label{constr:u}
-    1 \leq u_i \leq n_t + 1 \in \mathbb{R} \; \forall 0 \leq i \leq n_e
+    0 \leq u_i \leq n_t + 1 \in \mathbb{R} \; \forall 0 \leq i \leq n_e
 \end{equation}
 
 Constraints to make sure we get a tour:
