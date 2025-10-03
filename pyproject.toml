@@ -5,7 +5,7 @@ authors = [{ email = "casperg@umich.edu", name = "Casper Guo" }]
 description = "Arbitrary criteria optimal trip solver with time constraints."
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = ["httpx", "pydantic >= 2.6.0", "requests"]
+dependencies = ["httpx", "pydantic >= 2.6.0", "requests", "pulp"]
 
 [build-system]
 requires = ["setuptools >= 61.0"]
@@ -25,6 +25,10 @@ plugins = ["pydantic.mypy"]
 strict = true
 exclude_gitignore = true
 warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["pulp"]
+follow_untyped_imports = true
 
 [tool.ruff]
 preview = true
@@ -135,6 +139,9 @@ ignore = [
     "TRY003",  # false positives
     "UP015",   # explicit is better than implicit
 ]
+
+[tool.ruff.lint.ruff]
+parenthesize-tuple-in-subscript = true
 
 [tool.ruff.lint.extend-per-file-ignores]
 "trip_solver/models/api/**/*.py" = [
