@@ -22,7 +22,7 @@ Let $E$ be the set of events and $T$ be the set of teams one wishes to see. Deno
 
 Define $\mathbf{C}_{n_e \times n_e}$ to be the cost matrix according to some measure where $C_{ij}$ is the cost of travelling from $e_i$ to $e_j$. Note that this matrix is upper triangular in the sense that the elements below the main diagonal are infinite/undefined since one cannot travel back in time. Additionally define $C_{0j} = 0 \; \forall j$ and $C_{i0} = 0 \; \forall i$ to allow for no-cost travel to and from the dummy event.
 
-Define $\mathbf{M}_{n_e \times n_t}$ to be the matchup matrix where $M_{ij} = 1$ if team $t_j$ participates in event $i$ and 0 otherwise. Note that this matrix is very sparse (with density equal to $1/n_t$) since each row, representing a single event, will involve exactly one team and thus have exactly one entry equal to 1. This matrix is so defined under the assumption that a fan requires that his own team to be playing in the game, thus only distinguishing the opposing team is necessary. Additionally define $M_{0j} = 0 \; \forall j$ to represent the dummy event.
+Define $\mathbf{M}_{n_e \times n_t}$ to be the matchup matrix where $M_{ij} = 1$ if team $t_j$ participates in event $i$ and 0 otherwise. Note that this matrix is very sparse (with density no more than $2/n_t$) since each row, representing a single event, will involve exactly two teams and have either one or two entries equal to 1 depending on the formulation. To solve the "watch one team play some other teams" problem, only the other team should receive a non-zero entry. To solve the "watch games played by a set of teams" problem, both teams in an event should receive a non-zero entry. Additionally define $M_{0j} = 0 \; \forall j$ to represent the dummy event.
 
 Note that if, instead of optimizing for a set of teams one wishes to see, we instead optimize for a set of venues one wishes to visit, we can define a venue matrix $\mathbf{V}$ exactly analogous to $\mathbf{M}$ and all subsequent derivations apply similarly.
 
@@ -49,85 +49,32 @@ Constraints for the range of variables:
     x_{i0} \in \{0, 1\} \; \forall 1 \leq i \leq n_e
 \end{equation}
 
-The visit order variables can be modelled as continuous variables to improve solver performance, although in practice they will be almost equal to integers once optimized.
-
-\begin{equation} \label{constr:u}
-    1 \leq u_i \leq n_t + 1 \in \mathbb{R} \; \forall 0 \leq i \leq n_e
-\end{equation}
-
 Constraints to make sure we get a tour:
 
 \begin{equation} \label{constr:in_edge}
-    \sum_{i=0, i < j}^{n_e} x_{ij} \leq 1 \; \forall 1 \leq j \leq n_e
+    \sum_{i=0, i < j}^{n_e} x_{ij} \leq 1 \; \forall 0 \leq j \leq n_e
 \end{equation}
 
 \begin{equation} \label{constr:out_edge}
-    x_{i0} + \sum_{j=1, j > i}^{n_e} x_{ij} \leq 1 \; \forall 1 \leq i \leq n_e
+    x_{i0} + \sum_{j=1, j > i}^{n_e} x_{ij} \leq 1 \; \forall 0 \leq i \leq n_e
 \end{equation}
 
-The subtour elimination constraint:
+Since we are not guaranteed to visit all events, we need to explicitly restrict the indegree and the outdegree of each node to be equal.
 
-\begin{equation} \label{constr:order}
-    u_i - u_j \leq (1 - x_{ij})(n_t + 1) - x_{ij} \; 0 \leq i \neq j \leq n_e
+\begin{equation} \label{constr:equal_degree}
+    \sum_{i=0, i < j}^{n_e} x_{ij} - \sum_{k=1, k > j}^{n_e} x_{jk} - x_{j0} = 0 \; \forall 0 \leq j \leq n_e
 \end{equation}
 
-To make sure we start and end the tour at the dummy event $e_0$:
-
-\begin{equation} \label{constr:start}
-    u_0 = 1
-\end{equation}
-
-\begin{equation} \label{constr:start_out_edge}
-    \sum_{j=1}^{n_e} x_{0j} = 1
-\end{equation}
-
-\begin{equation} \label{constr:end}
-    \sum_{i=1}^{n_e} x_{i0} = 1
-\end{equation}
-
-Finally, to make sure we see all teams once and exactly once:
+Finally, to make sure we see all teams at least once:
 
 \begin{equation} \label{constr:teams}
-    \sum_{i=0}^{n_e} \sum_{j=i + 1}^{n_e} x_{ij}M_{jk}  = 1 \; \forall 1 \leq k \leq n_t
+    \sum_{i=0}^{n_e} \sum_{j=i + 1}^{n_e} x_{ij}M_{jk} \geq 1 \; \forall 1 \leq k \leq n_t
 \end{equation}
 
-In other words, all columns of $\mathbf{X} \mathbf{M}$ sum to 1.
-
-\section{Proofs}
-\subsection{No Subtour}
-Since we do not care to visit all events, the tour order variable's definition is different from that seen in the \href{https://en.wikipedia.org/wiki/Travelling_salesman_problem#Miller%E2%80%93Tucker%E2%80%93Zemlin_formulation}{MTZ formulation}.
-
-Compare the following MTZ constraint to our constraint \eqref{constr:order}:
-
-\begin{equation} \label{constr:mtz_u}
-    1 \leq u_i \leq n_e \quad 1 \leq i \leq n_e
-\end{equation}
-
-\begin{equation} \label{constr:mtz}
-    u_i - u_j + 1 \leq (n_e - 1)(1 - x_{ij}) \; 1 \leq i \neq j \leq n_e
-\end{equation}
-
-When $x_{ij} = 0$, the MTZ constraint simplifies to $u_i - u_j \leq n_e - 1$ which is just a reformulation of the bounds placed on $u$. In our constraint this simplifies to $u_i - u_j \leq n_t + 1$ which has the same meaning, albeit with a different bound to allow for a tour of $n_t$ events with some events left unvisited.
-
-When $x_{ij} = 1$, the MTZ constraint simplifies to $u_i - u_j \leq -1$, which guarantees that $e_i$ is visited before $e_j$ as expected. In our constraint this simplifies to $u_i - u_j \leq -1$ which is equivalent.
-
-\subsection{Tour Ordering}
-We want for any unvisited event $e_i$ to have $u_i = 0$. This constraint is actually implied by constraint \eqref{constr:teams}, which can be rewritten as.
-
-\begin{equation}
-    \sum_{i=0}^{n_e} \sum_{j = 1, j > i}^{n_e} \sum_{k=1}^{n_t} x_{ij} M_{jk} = n_t
-\end{equation}
-
-Consider any fixed $i, j$ where $j \neq 0$, there is exactly one $k$ such that $M_{jk} = 1$. Thus constraint \eqref{constr:teams} implies that there is exactly $n_t$ non-zero $x_{ij}$ variables where $j \geq 1$, corresponding to the $n_t$ non-dummy events visited. Then constraint \eqref{constr:end} provides that there is exactly 1 non-zero $x_{i0}$. So in total we have exactly $n_t + 1$ non-zero $x_{ij}$ variables.
-
-Each non-zero $x_{ij}$ variable correspond to some value of $u_i$ and we therefore have at least $n_t + 1$ non-zero $u_i$ variables. Constraint \eqref{constr:order} provides that the absolute difference between any two of these variables is at least 1 and constraint \eqref{constr:u} provides that they range between 1 and $n_t + 1$. Thus these $n_t + 1$ variables must be exactly the integers between 1 and $n_t + 1$ and there can be no other non-zero $u_i$ variables.
-
-\section{Limitations}
-The major limitation of this formulation is that the visit order variables imply \emph{a priori} knowledge of the number of events $\hat{n}_e$ in the optimal tour. In the cases of seeing one fixed team play against a set of teams or visiting a set of venues, $\hat{n}_e$ is trivially equal to the number of teams or number of venues respectively under any nonnegative cost function. This is because that the cost of the optimal satisfying tour is monotonically increasing with respect to the number of events visited. As an aside, the latter inquiry is much more computationally intensive than the former, given that the number of candidate events is much larger.
-
-This formulation thus cannot answer some other reasonable questions, such as the optimal way to watch a set of teams. In this scenario, it is not necessarily optimal to require that every event attended involves two previously unseen teams. So $\hat{n}_e$ is not known \emph{a priori} and the order variables cannot be defined.
+\section{Notes}
+We have dropped the subtour elimination constraint of the \href{https://en.wikipedia.org/wiki/Travelling_salesman_problem#Miller%E2%80%93Tucker%E2%80%93Zemlin_formulation}{MTZ formulation} because of the special structure of our graph. The induced subgraph of non-dummy events is directed with no back edges and acyclic. Therefore any cycle on the graph must go through the dummy event and subtours are not possible.
 
 \section{Conclusion}
-We have constructed an integer program that is a modified version of the MTZ formulation for TSP. This program has roughly $n_e^2 / 2 + n_e$ binary variables and roughly $n_e^2 + 3n_e + n_t$ constraints.
+We have constructed an integer program that is a modified version of the MTZ formulation for TSP. This program has on the order of $n_e^2 / 2$ binary variables and roughly $3n_e + n_t$ constraints.
 
 \end{document}
