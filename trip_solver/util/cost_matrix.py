@@ -1,11 +1,13 @@
 """Calculate the cost matrix for a set of events or the distance matrix for a set of venues."""
 
+import json
 import logging
 import zoneinfo
 from collections.abc import Iterator
 from datetime import datetime, timezone
 from enum import StrEnum, auto
 from itertools import permutations
+from pathlib import Path
 
 from trip_solver.data.api.google_maps import (
     TRAFFIC_UNAWARE_MAX_ELEMENTS,
@@ -197,3 +199,10 @@ def convert_cost_matrix_str_keys(matrix: dict[str, dict[str, int]]) -> CostMatri
             int(inner_key): inner_val for inner_key, inner_val in value.items()
         }
     return converted_matrix
+
+
+def load_cost_matrix_from_json(file_path: Path) -> CostMatrix:
+    """Load a cost matrix from a JSON file, converting the keys back to integers."""
+    with file_path.open("r", encoding="utf-8") as f:
+        matrix = json.load(f)
+    return convert_cost_matrix_str_keys(matrix)
