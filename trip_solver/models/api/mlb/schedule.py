@@ -10,7 +10,7 @@ from trip_solver.models.api.mlb.common import MLBVenue
 from trip_solver.util.models import FrozenModel, StrictModel
 from trip_solver.util.validators import check_acceptable_date_input
 
-DateParam = Annotated[str | None, AfterValidator(check_acceptable_date_input)]
+DateParam = Annotated[str | None, AfterValidator(check_acceptable_date_input)]  # noqa: RUF031 Pydantic doc style
 
 
 class MLBGameType(StrEnum):  # noqa: D101

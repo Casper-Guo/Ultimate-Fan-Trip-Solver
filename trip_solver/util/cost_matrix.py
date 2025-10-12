@@ -31,7 +31,7 @@ class CostMeasure(StrEnum):
 
     DRIVING_DISTANCE = auto()
     DRIVING_DURATION = auto()
-    TOTAL_DURATION = auto()
+    TRIP_DURATION = auto()
 
 
 def partition_route_matrix(venues: Venues) -> Iterator[tuple[int, int, RouteMatrixResponse]]:
@@ -181,7 +181,7 @@ def compute_cost_matrix(
             if venues is None:
                 raise TypeError("Venues must be provided for driving cost matrix.")
             return compute_driving_cost_matrix(venues)
-        case CostMeasure.TOTAL_DURATION:
+        case CostMeasure.TRIP_DURATION:
             if events is None:
                 raise TypeError("Events must be provided for total duration cost matrix.")
             return compute_total_duration_matrix(events)
