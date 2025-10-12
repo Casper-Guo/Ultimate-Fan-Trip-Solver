@@ -5,7 +5,7 @@ from itertools import permutations
 from typing import TypeAlias
 from zoneinfo import ZoneInfo
 
-from trip_solver.models.internal import CostMatrix, Event, Events
+from trip_solver.models.internal import CostMatrix, Event, Events, Teams
 from trip_solver.solver.consts import AVG_EVENT_LENGTH, DUMMY_EVENT_ID
 from trip_solver.util.cost_matrix import CostMeasure
 
@@ -180,3 +180,31 @@ def build_cost_matrix(
             raise ValueError("Route matrix must be provided for driving cost measures.")
         return build_driving_cost_matrix(events, route_matrix, include_dummy)
     raise ValueError(f"Unsupported cost measure: {measure}")
+
+
+def remove_infeasible_teams(teams: Teams, team_name: str) -> Teams:
+    """
+    Remove teams pairing that do not face each other in an eligible game.
+
+    For example, in the 2025-26 NHL season, the Nashville Predators do not face
+    the Pittsburgh Penguins in North America.
+    """
+    # NHL Sweden series
+    if team_name == "Nashville Predators":
+        return Teams(
+            teams=[team for team in teams.teams if team.name != "Pittsburgh Penguins"],
+        )
+    if team_name == "Pittsburgh Penguins":
+        return Teams(
+            teams=[team for team in teams.teams if team.name != "Nashville Predators"],
+        )
+    # NBA Europe games
+    if team_name == "Orlando Magic":
+        return Teams(
+            teams=[team for team in teams.teams if team.name != "Memphis Grizzlies"],
+        )
+    if team_name == "Memphis Grizzlies":
+        return Teams(
+            teams=[team for team in teams.teams if team.name != "Orlando Magic"],
+        )
+    return teams
