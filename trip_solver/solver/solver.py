@@ -148,7 +148,10 @@ def solve(
     # objective function
     optimal_trip += (
         pulp.lpSum([
-            var * cost_matrix[event_i][event_j]
+            # minimize the number of events attended even when the cost matrix entry is zero
+            # this is especially an issue with MLB teams playing in the same location
+            # in consecutive days
+            var * (cost_matrix[event_i][event_j] + 1)
             for (event_i, event_j), var in edge_variables.items()
         ]),
         "total_cost",
@@ -164,7 +167,6 @@ def solve(
         interested_teams,
     )
 
-    optimal_trip.writeLP("optimal_trip.lp")
     optimal_trip.solve(solver=pulp.HiGHS(msg=False))
     logger.info("Solver status: %s", pulp.LpStatus[optimal_trip.status])
     return optimal_trip
