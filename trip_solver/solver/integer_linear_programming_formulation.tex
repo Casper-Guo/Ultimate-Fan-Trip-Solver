@@ -35,8 +35,10 @@ Define the visit order variables $u_i \in \mathbb{R}$ where $0 \leq i \leq n_e$.
 Minimize:
 
 \begin{equation} \label{eq:objective}
-\sum_{i=1}^{n_e} \sum_{j=i+1}^{n_e} \mathbf{C}_{ij} x_{ij}
+\sum_{i=1}^{n_e} \sum_{j=i+1}^{n_e} (\mathbf{C}_{ij} + 1) x_{ij}
 \end{equation}
+
+The meaning of the $+1$ is to minimize the number of events visited. This is useful in scenarios where the cost is otherwise 0, such as the driving distance between two MLB games in the same series.
 
 \section{Constraints}
 Constraints for the range of variables:
