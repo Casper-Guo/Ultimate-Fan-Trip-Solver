@@ -31,7 +31,7 @@ def available_driving_time(
     event_length: int = AVG_EVENT_LENGTH,
 ) -> int:
     """
-    Check whether it is feasible to attend both event_1 and event_2.
+    Compute the available driving time between event_1 and event_2.
 
     driving_time is given in minutes.
 
@@ -44,16 +44,25 @@ def available_driving_time(
     event_2_time = event_2.time.astimezone(tz=ZoneInfo("America/New_York"))
 
     allowed_start = event_1_time + timedelta(minutes=event_length + 60)
-    end_of_start_day = strip_datetime(allowed_start) + timedelta(days=1)
+    allowed_end = event_2_time - timedelta(hours=1)
+
+    if allowed_start.date() == allowed_end.date():
+        return int(
+            min(
+                max((allowed_end - allowed_start).total_seconds() // 60, 0),
+                60 * max_driving_hours_per_day,
+            ),
+        )
+
+    end_of_start_day = strip_datetime(event_1_time) + timedelta(days=1)
     start_day_driving_time = min(
-        (end_of_start_day - allowed_start).total_seconds() // 60,
+        max((end_of_start_day - allowed_start).total_seconds() // 60, 0),
         60 * max_driving_hours_per_day,
     )
 
-    allowed_end = event_2_time - timedelta(hours=1)
-    start_of_end_day = strip_datetime(allowed_end)
+    start_of_end_day = strip_datetime(event_2_time)
     end_day_driving_time = min(
-        (allowed_end - strip_datetime(allowed_end)).total_seconds() // 60,
+        max((allowed_end - start_of_end_day).total_seconds() // 60, 0),
         60 * max_driving_hours_per_day,
     )
 
