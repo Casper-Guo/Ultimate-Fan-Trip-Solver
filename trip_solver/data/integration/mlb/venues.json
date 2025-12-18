@@ -67,6 +67,17 @@
       }
     },
     {
+      "name": "Tropicana Field",
+      "id": 12,
+      "address": "1 Tropicana Dr., St. Petersburg, FL 33705, USA",
+      "place_name": "",
+      "place_id": "ChIJkXdv95vhwogR3e84WZCqrJ4",
+      "location": {
+        "latitude": 27.768188,
+        "longitude": -82.653408
+      }
+    },
+    {
       "name": "Rogers Centre",
       "id": 14,
       "address": "1 Blue Jays Way, Toronto, ON M5V 1J4, Canada",
@@ -151,7 +162,7 @@
       "place_id": "ChIJ28RdUJ9qkFQRlf2mprMp-MY",
       "location": {
         "latitude": 47.591471999999996,
-        "longitude": -122.3325833
+        "longitude": -122.33258319999997
       }
     },
     {
@@ -172,8 +183,8 @@
       "place_name": "Detroit",
       "place_id": "ChIJX0K0mzMtO4gRXpDZC0HNsqg",
       "location": {
-        "latitude": 42.3393053,
-        "longitude": -83.0488724
+        "latitude": 42.3389763,
+        "longitude": -83.048597
       }
     },
     {
@@ -183,19 +194,8 @@
       "place_name": "San Francisco",
       "place_id": "ChIJ_T25cNd_j4ARehGmHe0pT84",
       "location": {
-        "latitude": 37.7784136,
-        "longitude": -122.38921680000001
-      }
-    },
-    {
-      "name": "George M. Steinbrenner Field",
-      "id": 2523,
-      "address": "1 Steinbrenner Dr, Tampa, FL 33614, USA",
-      "place_name": "Tampa",
-      "place_id": "ChIJKwWA3sfDwogRw2ERUbKhY9k",
-      "location": {
-        "latitude": 27.9802656,
-        "longitude": -82.50640729999999
+        "latitude": 37.7783654,
+        "longitude": -122.38991619999999
       }
     },
     {
@@ -227,8 +227,8 @@
       "place_name": "San Diego",
       "place_id": "ChIJ7fMsvKtU2YARXM4yStBv8rU",
       "location": {
-        "latitude": 32.7075941,
-        "longitude": -117.15704219999999
+        "latitude": 32.707617299999995,
+        "longitude": -117.15704050000001
       }
     },
     {
@@ -240,6 +240,17 @@
       "location": {
         "latitude": 39.9060572,
         "longitude": -75.1664952
+      }
+    },
+    {
+      "name": "Journey Bank Ballpark",
+      "id": 2735,
+      "address": "1700 W 4th St, Williamsport, PA 17701, USA",
+      "place_name": "",
+      "place_id": "ChIJlUPXQOaoz4kR3fj28zKVBdI",
+      "location": {
+        "latitude": 41.2423286,
+        "longitude": -77.04709220000001
       }
     },
     {
@@ -326,8 +337,19 @@
       "place_name": "Arlington",
       "place_id": "ChIJKzjlim6HToYRm7CjYlFnXiA",
       "location": {
-        "latitude": 32.746881,
-        "longitude": -97.0831551
+        "latitude": 32.7466803,
+        "longitude": -97.0828087
+      }
+    },
+    {
+      "name": "Estadio Alfredo Harp Helu",
+      "id": 5340,
+      "address": "Av. Viaducto Rio de la Piedad Ciudad de los Deportes Magdalena Mixihuca, Puerta 8, Granjas México, Iztacalco, 08400 Ciudad de México, CDMX, Mexico",
+      "place_name": "",
+      "place_id": "ChIJi3mnaTn80YURx9zrrX9yv6M",
+      "location": {
+        "latitude": 19.4033566,
+        "longitude": -99.08434539999999
       }
     },
     {
@@ -339,6 +361,17 @@
       "location": {
         "latitude": 36.1528078,
         "longitude": -115.3296762
+      }
+    },
+    {
+      "name": "Field of Dreams",
+      "id": 5445,
+      "address": "28995 Lansing Rd, Dyersville, IA 52040, USA",
+      "place_name": "",
+      "place_id": "ChIJCffU0ohN44cR7QHiicuS8sc",
+      "location": {
+        "latitude": 42.4978632,
+        "longitude": -91.0541695
       }
     }
   ]
