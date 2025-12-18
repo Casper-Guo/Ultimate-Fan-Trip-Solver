@@ -53,9 +53,11 @@ class Event(ExtraFrozenModel):  # noqa: D101
 
     @field_validator("time", mode="before")
     @classmethod
-    def parse_time(cls, v: str) -> datetime:
+    def parse_time(cls, v: str | datetime) -> datetime:
         """Convert event time from ISO string to datetime."""
-        return datetime.fromisoformat(v)
+        if isinstance(v, str):
+            return datetime.fromisoformat(v)
+        return v
 
     @field_serializer("time")
     @classmethod
