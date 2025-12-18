@@ -4,7 +4,7 @@ name = "trip_solver"
 authors = [{ email = "casperg@umich.edu", name = "Casper Guo" }]
 description = "Arbitrary criteria optimal trip solver with time constraints."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = ["httpx", "pydantic >= 2.6.0", "requests", "pulp", "pulp[highs]"]
 
 [build-system]
