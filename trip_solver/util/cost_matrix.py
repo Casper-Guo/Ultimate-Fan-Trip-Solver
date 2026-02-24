@@ -4,7 +4,7 @@ import json
 import logging
 import zoneinfo
 from collections.abc import Iterator
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from enum import StrEnum, auto
 from itertools import permutations
 from pathlib import Path
@@ -137,7 +137,7 @@ def compute_driving_cost_matrix(venues: Venues) -> tuple[CostMatrix, CostMatrix]
 def utc_to_eastern(dt: datetime) -> datetime:
     """Convert a UTC datetime, whether timezone-aware or naive, to US Eastern time."""
     eastern = zoneinfo.ZoneInfo("America/New_York")
-    dt = dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt.astimezone(timezone.utc)
+    dt = dt.replace(tzinfo=UTC) if dt.tzinfo is None else dt.astimezone(UTC)
     return dt.astimezone(eastern)
 
 
