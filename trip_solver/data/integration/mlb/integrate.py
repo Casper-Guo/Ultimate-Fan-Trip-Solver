@@ -34,10 +34,13 @@ if __name__ == "__main__":
     stadium_locations = {team.venue.id: team.locationName for team in mlb_teams.teams}
     # The As are scheduled to play a few games at the Las Vegas Ballpark
     stadium_locations[5355] = "Las Vegas"
+    # Field of Dreams need disambiguation
+    stadium_locations[5445] = "Dyersville"
 
     unique_venues = {
         (game.venue.id, game.venue.name) for date in mlb_schedule.dates for game in date.games
     }
+
     venues = Venues(
         venues=[
             get_venue_info(

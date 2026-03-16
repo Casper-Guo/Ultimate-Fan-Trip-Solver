@@ -70,7 +70,7 @@
       "name": "Tropicana Field",
       "id": 12,
       "address": "1 Tropicana Dr., St. Petersburg, FL 33705, USA",
-      "place_name": "",
+      "place_name": "St. Petersburg",
       "place_id": "ChIJkXdv95vhwogR3e84WZCqrJ4",
       "location": {
         "latitude": 27.768188,
@@ -367,7 +367,7 @@
       "name": "Field of Dreams",
       "id": 5445,
       "address": "28995 Lansing Rd, Dyersville, IA 52040, USA",
-      "place_name": "",
+      "place_name": "Dyersville",
       "place_id": "ChIJCffU0ohN44cR7QHiicuS8sc",
       "location": {
         "latitude": 42.4978632,
