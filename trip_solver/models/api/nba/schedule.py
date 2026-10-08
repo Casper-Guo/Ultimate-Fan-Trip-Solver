@@ -1,55 +1,104 @@
-"""NBA schedule endpoint response model."""
+"""
+ESPN NBA teams and team schedule endpoints path params, query params, and response models.
 
-from datetime import date, datetime
+Only the fields used by the integration script are modelled.
+"""
 
-from pydantic import field_validator
+from datetime import datetime
+from enum import IntEnum
+from typing import Literal, NamedTuple
 
-from trip_solver.util.models import FrozenModel
-
-
-class NBATeam(FrozenModel):
-    """Some games are scheduled without knowing which teams will play."""
-
-    # when other attributes are not given, teamId is set to 0
-    teamId: int
-    teamName: str | None = None
-    teamCity: str | None = None
-    teamTricode: str | None = None
-    teamSlug: str | None = None
+from trip_solver.util.models import FrozenModel, StrictModel
 
 
-class NBAGame(FrozenModel):  # noqa: D101
-    gameId: str
-    gameCode: str
-    gameDateTimeUTC: datetime
-    # preseason games are all week 0
-    weekNumber: int
-    # regular season games usually do not get a label
-    gameLabel: str
-    arenaName: str
-    arenaState: str
-    arenaCity: str
-    isNeutral: bool
-    homeTeam: NBATeam
-    awayTeam: NBATeam
+class NBASeasonType(IntEnum):  # noqa: D101
+    PRESEASON = 1
+    REGULAR_SEASON = 2
+    POSTSEASON = 3
 
 
-class NBAGameDate(FrozenModel):  # noqa: D101
-    gameDate: date
-    games: list[NBAGame]
-
-    @field_validator("gameDate", mode="before")
-    @classmethod
-    def parse_game_date(cls, v: str) -> date:
-        """Game dates are provided in the following format: 10/02/2025 00:00:00."""
-        return datetime.strptime(v, "%m/%d/%Y %H:%M:%S").date()  # noqa: DTZ007
+class NBATeam(FrozenModel):  # noqa: D101
+    id: int
+    location: str
+    displayName: str
 
 
-class NBALeagueSchedule(FrozenModel):  # noqa: D101
-    seasonYear: str
-    leagueId: str
-    gameDates: list[NBAGameDate]
+class NBATeamsTeam(FrozenModel):  # noqa: D101
+    team: NBATeam
 
 
-class NBAScheduleResponse(FrozenModel):  # noqa: D101
-    leagueSchedule: NBALeagueSchedule
+class NBATeamsLeague(FrozenModel):  # noqa: D101
+    teams: list[NBATeamsTeam]
+
+
+class NBATeamsSport(FrozenModel):  # noqa: D101
+    leagues: list[NBATeamsLeague]
+
+
+class NBATeamsResponse(FrozenModel):  # noqa: D101
+    sports: list[NBATeamsSport]
+
+
+class NBATeamSchedulePathParams(NamedTuple):  # noqa: D101
+    team_id: int
+    resource: Literal["schedule"] = "schedule"
+
+
+class NBATeamScheduleQueryParams(StrictModel):  # noqa: D101
+    # ESPN labels a season by the year it ends in, e.g. 2027 for 2026-27
+    # defaults to the current season when omitted
+    season: int | None = None
+    seasontype: NBASeasonType = NBASeasonType.REGULAR_SEASON
+
+
+class NBAVenueAddress(FrozenModel):  # noqa: D101
+    city: str
+    # not provided for venues outside the US and Canada
+    state: str | None = None
+
+
+class NBAVenue(FrozenModel):  # noqa: D101
+    fullName: str
+    address: NBAVenueAddress
+
+
+class NBACompetitor(FrozenModel):  # noqa: D101
+    homeAway: Literal["home", "away"]
+    team: NBATeam
+
+
+class NBACompetition(FrozenModel):  # noqa: D101
+    neutralSite: bool
+    venue: NBAVenue
+    competitors: list[NBACompetitor]
+
+
+class NBAEventSeasonType(FrozenModel):  # noqa: D101
+    type: NBASeasonType
+
+
+class NBAGame(FrozenModel):
+    """
+    A scheduled game.
+
+    Games whose participants are not yet known, e.g. NBA Cup knockout games, are not listed.
+    """
+
+    id: str
+    date: datetime
+    seasonType: NBAEventSeasonType
+    # always exactly one competition per game
+    competitions: list[NBACompetition]
+
+    def get_team(self, home_away: Literal["home", "away"]) -> NBATeam:
+        """Get the home or away team of the game."""
+        return next(
+            competitor.team
+            for competitor in self.competitions[0].competitors
+            if competitor.homeAway == home_away
+        )
+
+
+class NBATeamScheduleResponse(FrozenModel):  # noqa: D101
+    team: NBATeam
+    events: list[NBAGame]
