@@ -6,8 +6,8 @@ from pathlib import Path
 
 from trip_solver.data.api.mlb.schedule import MLBSchedule
 from trip_solver.data.api.mlb.teams import MLBTeams
-from trip_solver.data.integration import get_venue_info
-from trip_solver.models.internal import Event, Events, Team, Teams, Venues
+from trip_solver.data.integration import filter_north_american_venues, get_venue_info
+from trip_solver.models.internal import Event, Events, Team, Teams
 from trip_solver.util.cost_matrix import compute_cost_matrix
 
 logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
@@ -41,15 +41,13 @@ if __name__ == "__main__":
         (game.venue.id, game.venue.name) for date in mlb_schedule.dates for game in date.games
     }
 
-    venues = Venues(
-        venues=[
-            get_venue_info(
-                venue_name,
-                stadium_locations.get(venue_id, ""),
-                venue_id,
-            )
-            for venue_id, venue_name in sorted(unique_venues)
-        ],
+    venues = filter_north_american_venues(
+        get_venue_info(
+            venue_name,
+            stadium_locations.get(venue_id, ""),
+            venue_id,
+        )
+        for venue_id, venue_name in sorted(unique_venues)
     )
     venue_index = {venue.id: venue for venue in venues.venues}
     distance_matrix, duration_matrix = compute_cost_matrix(venues=venues)
@@ -65,7 +63,7 @@ if __name__ == "__main__":
             )
             for date in mlb_schedule.dates
             for game in date.games
-            if game.seriesDescription == "Regular Season"
+            if game.seriesDescription == "Regular Season" and game.venue.id in venue_index
         ],
     )
 

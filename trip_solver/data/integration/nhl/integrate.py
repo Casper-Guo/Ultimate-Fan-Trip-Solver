@@ -6,13 +6,13 @@ from datetime import date, datetime
 from pathlib import Path
 
 from trip_solver.data.api.nhl.schedule import NHLSchedule
-from trip_solver.data.integration import get_venue_info
+from trip_solver.data.integration import filter_north_american_venues, get_venue_info
 from trip_solver.models.api.nhl.schedule import (
     NHLScheduleGame,
     NHLSchedulePathParams,
     NHLScheduleTeam,
 )
-from trip_solver.models.internal import Event, Events, Team, Teams, Venues
+from trip_solver.models.internal import Event, Events, Team, Teams
 from trip_solver.util.cost_matrix import compute_cost_matrix
 
 logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
@@ -25,10 +25,6 @@ def format_team_name(team: NHLScheduleTeam) -> str:  # noqa: D103
 
 def get_venue_name_info(game: NHLScheduleGame) -> tuple[str, str]:  # noqa: D103
     return game.venue.default, game.homeTeam.placeName.default
-
-
-def determine_game_eligibility(game: NHLScheduleGame) -> bool:  # noqa: D103
-    return game.venue.default != "Avicii Arena"
 
 
 if __name__ == "__main__":
@@ -52,11 +48,10 @@ if __name__ == "__main__":
     unique_teams: set[tuple[int, str]] = set()
 
     for game in nhl_games:
-        # Avicii Arena is in Sweden and the only non-NA NHL venue
-        # no good automated way to detect such special cases
+        # games outside North America are removed later based on the venue's country
         # there is a neutralSite attribute but using that also discards special
         # exhibition series and outdoor games etc.
-        if get_venue_name_info(game) not in venue_ids and determine_game_eligibility(game):
+        if get_venue_name_info(game) not in venue_ids:
             venue_ids[get_venue_name_info(game)] = len(venue_ids) + 1
         unique_teams.add((game.homeTeam.id, format_team_name(game.homeTeam)))
         unique_teams.add((game.awayTeam.id, format_team_name(game.awayTeam)))
@@ -64,14 +59,12 @@ if __name__ == "__main__":
     teams = Teams(teams=[Team(id=id_, name=name) for id_, name in sorted(unique_teams)])
     team_index = {team.id: team for team in teams.teams}
 
-    venues = Venues(
-        venues=[
-            get_venue_info(venue_name, venue_place_name, venue_id)
-            for (venue_name, venue_place_name), venue_id in sorted(
-                venue_ids.items(),
-                key=lambda x: x[1],  # noqa: FURB118 preference
-            )
-        ],
+    venues = filter_north_american_venues(
+        get_venue_info(venue_name, venue_place_name, venue_id)
+        for (venue_name, venue_place_name), venue_id in sorted(
+            venue_ids.items(),
+            key=lambda x: x[1],  # noqa: FURB118 preference
+        )
     )
     venue_index = {venue.name: venue for venue in venues.venues}
     distance_matrix, duration_matrix = compute_cost_matrix(venues=venues)
@@ -86,7 +79,7 @@ if __name__ == "__main__":
                 away_team=team_index[game.awayTeam.id],
             )
             for game in nhl_games
-            if determine_game_eligibility(game)
+            if game.venue.default in venue_index
         ],
     )
 

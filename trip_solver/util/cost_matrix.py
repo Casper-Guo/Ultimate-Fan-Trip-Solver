@@ -3,6 +3,7 @@
 import json
 import logging
 import zoneinfo
+from collections import Counter
 from collections.abc import Iterator
 from datetime import UTC, datetime
 from enum import StrEnum, auto
@@ -90,6 +91,7 @@ def compute_driving_cost_matrix(venues: Venues) -> tuple[CostMatrix, CostMatrix]
     """
     distance_matrix = {venue.id: {venue.id: 0} for venue in venues.venues}
     duration_matrix = {venue.id: {venue.id: 0} for venue in venues.venues}
+    routes_not_found: list[tuple[str, str]] = []
 
     for origin_index_start, destination_index_start, response in partition_route_matrix(venues):
         for element in response.routes:
@@ -105,10 +107,10 @@ def compute_driving_cost_matrix(venues: Venues) -> tuple[CostMatrix, CostMatrix]
                 continue
 
             if element.condition is RouteMatrixElementCondition.ROUTE_NOT_FOUND:
-                raise ValueError(
-                    f"No routes found between {venues.venues[origin_index].name} "
-                    f"and {venues.venues[destination_index].name}",
+                routes_not_found.append(
+                    (venues.venues[origin_index].name, venues.venues[destination_index].name),
                 )
+                continue
             if element.status is not None and element.status.code != gRPCCode.OK:
                 logger.warning("gRPC code: %s", element.status.code)
                 logger.warning("gRPC message: %s", element.status.message)
@@ -130,6 +132,14 @@ def compute_driving_cost_matrix(venues: Venues) -> tuple[CostMatrix, CostMatrix]
             duration_matrix[venues.venues[origin_index].id][
                 venues.venues[destination_index].id
             ] = element.staticDuration
+
+    if routes_not_found:
+        # every NA venue is in a pair with an unreachable venue (usually Europe or Asia)
+        # so only the venues failing the most pairs are the actual culprits
+        venue_counts = Counter(name for pair in routes_not_found for name in pair)
+        max_count = max(venue_counts.values())
+        unreachable = sorted(name for name, count in venue_counts.items() if count == max_count)
+        raise ValueError(f"Unreachable venues: {', '.join(unreachable)}")
 
     return distance_matrix, duration_matrix  # type: ignore[return-value] compatible subtype
 

@@ -5,9 +5,9 @@ import logging
 from pathlib import Path
 
 from trip_solver.data.api.nba.schedule import NBASchedule
-from trip_solver.data.integration import get_venue_info
+from trip_solver.data.integration import filter_north_american_venues, get_venue_info
 from trip_solver.models.api.nba.schedule import NBAGame, NBATeam
-from trip_solver.models.internal import Event, Events, Team, Teams, Venues
+from trip_solver.models.internal import Event, Events, Team, Teams
 from trip_solver.util.cost_matrix import compute_cost_matrix
 
 logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
@@ -25,11 +25,11 @@ def get_venue_name_info(game: NBAGame) -> tuple[str, str]:
 
 def determine_game_eligibility(game: NBAGame) -> bool:
     """
-    Only includes regular season games played in North America with known participants.
+    Only includes regular season games with known participants.
 
-    Counterintuitively, a game in Mexico City is included since it has state specified as MX.
+    Games outside North America are removed later based on the venue's country.
     """
-    return game.weekNumber >= 1 and game.homeTeam.teamName is not None and bool(game.arenaState)
+    return game.weekNumber >= 1 and game.homeTeam.teamName is not None
 
 
 if __name__ == "__main__":
@@ -41,8 +41,6 @@ if __name__ == "__main__":
 
     for game_date in nba_schedule.leagueSchedule.gameDates:
         for game in game_date.games:
-            # only include regular season games in north America with known participants
-            # An venue in Mexico is included because it has a state specified as MX
             if determine_game_eligibility(game):
                 if (venue_full_name := get_venue_name_info(game)) not in venue_ids:
                     venue_ids[venue_full_name] = len(venue_ids) + 1
@@ -52,14 +50,12 @@ if __name__ == "__main__":
     teams = Teams(teams=[Team(id=id_, name=name) for id_, name in sorted(unique_teams)])
     team_index = {team.id: team for team in teams.teams}
 
-    venues = Venues(
-        venues=[
-            get_venue_info(venue_name, venue_place_name, venue_id)
-            for (venue_name, venue_place_name), venue_id in sorted(
-                venue_ids.items(),
-                key=lambda x: x[1],  # noqa: FURB118 preference
-            )
-        ],
+    venues = filter_north_american_venues(
+        get_venue_info(venue_name, venue_place_name, venue_id)
+        for (venue_name, venue_place_name), venue_id in sorted(
+            venue_ids.items(),
+            key=lambda x: x[1],  # noqa: FURB118 preference
+        )
     )
     venue_index = {venue.name: venue for venue in venues.venues}
     distance_matrix, duration_matrix = compute_cost_matrix(venues=venues)
@@ -75,7 +71,7 @@ if __name__ == "__main__":
             )
             for game_date in nba_schedule.leagueSchedule.gameDates
             for game in game_date.games
-            if determine_game_eligibility(game)
+            if determine_game_eligibility(game) and game.arenaName in venue_index
         ],
     )
 

@@ -137,6 +137,7 @@ ignore = [
     "PLR0917", # function too many positional arguments
     "TRY003",  # false positives
     "UP015",   # explicit is better than implicit
+    "RUF067",  # code in __init__. We only declare consts in these files
 ]
 
 [tool.ruff.lint.ruff]
