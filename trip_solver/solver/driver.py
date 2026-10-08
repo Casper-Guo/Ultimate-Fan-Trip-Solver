@@ -12,11 +12,7 @@ from trip_solver.models.internal import CostMatrix, Event, Events, Teams
 from trip_solver.solver.consts import DUMMY_EVENT_ID
 from trip_solver.solver.solver import solve
 from trip_solver.util.cost_matrix import CostMeasure, load_cost_matrix_from_json
-from trip_solver.util.solver_util import (
-    build_cost_matrix,
-    build_matchup_matrix,
-    remove_infeasible_teams,
-)
+from trip_solver.util.solver_util import build_cost_matrix, build_matchup_matrix
 
 logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
@@ -136,9 +132,10 @@ def run_solver(
     )
 
     team_name = next(team.name for team in teams.teams if team.id == team_id)
-    teams = remove_infeasible_teams(teams, team_name)
 
-    # Some MLB interleague pairings do not play home-and-home
+    # Only require opponents the team actually visits among the eligible events
+    # Some MLB interleague pairings do not play home-and-home, and the only road game
+    # against an opponent may be outside North America and therefore excluded
     away_opponents = {event.home_team for event in relevant_events}
     teams = Teams(teams=list(away_opponents.intersection(set(teams.teams))))
 

@@ -17,6 +17,7 @@ TextSearchReturnFields: TypeAlias = tuple[
         "places.name",
         "nextPageToken",
         # Places API Text Search Pro SKU, 5,000 requests/month free
+        "places.addressComponents",
         "places.displayName",
         "places.formattedAddress",
         "places.location",
@@ -41,6 +42,7 @@ class TextSearchHeader(StrictModel):  # noqa: D101
         default=(
             "places.id",
             "places.name",
+            "places.addressComponents",
             "places.displayName",
             "places.formattedAddress",
             "places.location",
@@ -54,11 +56,26 @@ class TextSearchHeader(StrictModel):  # noqa: D101
         return ",".join(fields)
 
 
+class AddressComponent(FrozenModel):
+    """
+    A structured component of a place's address, e.g. its city or country.
+
+    See https://developers.google.com/maps/documentation/places/web-service/reference/rest/v1/places#addresscomponent
+    """
+
+    longText: str | None = None
+    # for the country component, this is the ISO 3166-1 alpha-2 country code
+    shortText: str | None = None
+    types: list[str] = Field(default_factory=list)
+    languageCode: str | None = None
+
+
 class PlaceResponse(FrozenModel):
     """A Place object returned by the Places API."""
 
     name: str | None = None
     id: str | None = None
+    addressComponents: list[AddressComponent] | None = None
     displayName: LocalizedText | None = None
     formattedAddress: str | None = None
     location: LatLng | None = None

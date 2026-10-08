@@ -31,6 +31,8 @@ class Venue(ExtraFrozenModel):  # noqa: D101
     place_name: str
     place_id: str
     location: LatLng
+    # ISO 3166-1 alpha-2 country code
+    country: str
 
 
 class Venues(ExtraFrozenModel):  # noqa: D101
