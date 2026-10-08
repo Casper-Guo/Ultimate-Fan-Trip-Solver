@@ -4,8 +4,8 @@ name = "trip_solver"
 authors = [{ email = "casperg@umich.edu", name = "Casper Guo" }]
 description = "Arbitrary criteria optimal trip solver with time constraints."
 readme = "README.md"
-requires-python = ">=3.11"
-dependencies = ["httpx", "pydantic >= 2.6.0", "requests", "pulp", "pulp[highs]"]
+requires-python = ">=3.12"
+dependencies = ["httpx", "pydantic >= 2.6.0", "requests", "pulp[highs] >= 4"]
 
 [build-system]
 requires = ["setuptools >= 61.0"]
@@ -137,6 +137,7 @@ ignore = [
     "PLR0917", # function too many positional arguments
     "TRY003",  # false positives
     "UP015",   # explicit is better than implicit
+    "UP040",   # keep TypeAlias annotations rather than the 3.12 type keyword for now
     "RUF067",  # code in __init__. We only declare consts in these files
 ]
 
