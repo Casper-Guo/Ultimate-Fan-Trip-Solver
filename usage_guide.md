@@ -72,6 +72,7 @@ python -m trip_solver.solver.driver trip_solver/data/integration/<league> ../Ult
 
 - The first argument is the folder holding the step 2 JSON files. The second is where the solutions go. The website's `data/` folder is gitignored.
 - The output has one folder per team, each containing `trip_duration.txt`, `driving_distance.txt`, and `driving_duration.txt`. Check that every team is present.
+- If the schedule makes a complete trip impossible for a team, the solver logs `No feasible trip found for team: ...` and writes `No solutions` to all three files. The converter turns these into "No Trip Found" pages.
 
 ## 5. Generate the pages
 
