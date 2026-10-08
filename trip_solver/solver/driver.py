@@ -9,7 +9,7 @@ from pathlib import Path
 import pulp  # type: ignore
 
 from trip_solver.models.internal import CostMatrix, Event, Events, Teams
-from trip_solver.solver.consts import DUMMY_EVENT_ID
+from trip_solver.solver.consts import DUMMY_EVENT_ID, NO_SOLUTION
 from trip_solver.solver.solver import solve
 from trip_solver.util.cost_matrix import CostMeasure, load_cost_matrix_from_json
 from trip_solver.util.solver_util import build_cost_matrix, build_matchup_matrix
@@ -143,6 +143,7 @@ def run_solver(
     # not done earlier to avoid mixing the two formats when dealing with matchup edge cases
     team_name = team_name.replace(" ", "_").lower()
 
+    Path(output_dir / team_name).mkdir(parents=True, exist_ok=True)
     try:
         # only need to run binary search once to find the lower bound for feasible driving hours
         trip_duration_sol, driving_hours = binary_search_driving_hours(
@@ -152,13 +153,21 @@ def run_solver(
             matchup_matrix,
             teams,
         )
-        Path(output_dir / team_name).mkdir(parents=True, exist_ok=True)
-        Path(output_dir / team_name / "trip_duration.txt").write_text(
-            format_lp_output(trip_duration_sol, driving_hours),
-            encoding="utf-8",
-        )
-    except RuntimeError as e:
-        raise RuntimeError(f"No feasible trip found for team {team_name}") from e
+    except RuntimeError:
+        # the schedule can make a trip impossible regardless of the driving hours allowed
+        # e.g. play the only away games of the season against two opponents
+        # on back-to-back nights and the distance is too long to cover in one day
+        logger.warning("No feasible trip for %s.", team_name)
+        for file_name in ("trip_duration.txt", "driving_distance.txt", "driving_duration.txt"):
+            Path(output_dir / team_name / file_name).write_text(
+                f"{NO_SOLUTION}\n",
+                encoding="utf-8",
+            )
+        return
+    Path(output_dir / team_name / "trip_duration.txt").write_text(
+        format_lp_output(trip_duration_sol, driving_hours),
+        encoding="utf-8",
+    )
     driving_distance_sol, _ = solve(
         relevant_events,
         driving_hours,
