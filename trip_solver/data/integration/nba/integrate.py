@@ -17,6 +17,14 @@ from trip_solver.util.cost_matrix import compute_cost_matrix
 logging.basicConfig(level=logging.INFO, format="%(filename)s\t%(levelname)s\t%(message)s")
 logger = logging.getLogger(__name__)
 
+# ESPN uses some abbreviated team names, keyed by the lowercased ESPN name
+TEAM_NAME_OVERRIDES = {"la clippers": "Los Angeles Clippers"}
+
+
+def format_team_name(name: str) -> str:
+    """Replace abbreviated ESPN team names with the full name."""
+    return TEAM_NAME_OVERRIDES.get(name.lower(), name)
+
 
 def get_venue_name_info(game: NBAGame) -> tuple[str, str]:
     """
@@ -45,7 +53,7 @@ if __name__ == "__main__":
     teams = Teams(
         teams=sorted(
             (
-                Team(id=team.team.id, name=team.team.displayName)
+                Team(id=team.team.id, name=format_team_name(team.team.displayName))
                 for team in nba_teams.sports[0].leagues[0].teams
             ),
             key=lambda team: team.id,
