@@ -66,7 +66,7 @@ def binary_search_driving_hours(
 
     while left != right:
         middle = left + ceil((right - left) / 2)
-        solution = solve(
+        solution, stats = solve(
             events,
             middle,
             driving_duration_matrix,
@@ -74,7 +74,7 @@ def binary_search_driving_hours(
             matchup_matrix,
             teams.teams,
         )
-        if solution.status != pulp.LpStatusOptimal:
+        if stats.status != pulp.LpSolveStatus.Optimal:
             # need to try a higher driving hours allowance
             left = middle
         else:
@@ -82,7 +82,7 @@ def binary_search_driving_hours(
             min_driving_solution = solution
             right = middle - 1
 
-    solution = solve(
+    solution, stats = solve(
         events,
         left,
         driving_duration_matrix,
@@ -90,7 +90,7 @@ def binary_search_driving_hours(
         matchup_matrix,
         teams.teams,
     )
-    if solution.status == pulp.LpStatusOptimal:
+    if stats.status == pulp.LpSolveStatus.Optimal:
         min_driving_hours = left
         min_driving_solution = solution
 
@@ -159,7 +159,7 @@ def run_solver(
         )
     except RuntimeError as e:
         raise RuntimeError(f"No feasible trip found for team {team_name}") from e
-    driving_distance_sol = solve(
+    driving_distance_sol, _ = solve(
         relevant_events,
         driving_hours,
         driving_duration_matrix,
@@ -171,7 +171,7 @@ def run_solver(
         format_lp_output(driving_distance_sol, driving_hours),
         encoding="utf-8",
     )
-    driving_duration_sol = solve(
+    driving_duration_sol, _ = solve(
         relevant_events,
         driving_hours,
         driving_duration_matrix,

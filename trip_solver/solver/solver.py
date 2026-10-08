@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_edge_variables(
+    problem: pulp.LpProblem,
     events: list[Event],
     max_driving_hours_per_day: int,
     driving_duration_matrix: CostMatrix,
@@ -32,18 +33,18 @@ def create_edge_variables(
             event_j,
             max_driving_hours_per_day,
         ) >= ceil(driving_duration_matrix[event_i.id][event_j.id] / 60):
-            edge_variable_dict[(event_i.id, event_j.id)] = pulp.LpVariable(
+            edge_variable_dict[(event_i.id, event_j.id)] = problem.add_variable(
                 f"x_{event_i.id}_{event_j.id}",
                 cat=pulp.LpBinary,
             )
 
     # add the dummy event edge variables
     for event in events:
-        edge_variable_dict[(DUMMY_EVENT_ID, event.id)] = pulp.LpVariable(
+        edge_variable_dict[(DUMMY_EVENT_ID, event.id)] = problem.add_variable(
             f"x_{DUMMY_EVENT_ID}_{event.id}",
             cat=pulp.LpBinary,
         )
-        edge_variable_dict[(event.id, DUMMY_EVENT_ID)] = pulp.LpVariable(
+        edge_variable_dict[(event.id, DUMMY_EVENT_ID)] = problem.add_variable(
             f"x_{event.id}_{DUMMY_EVENT_ID}",
             cat=pulp.LpBinary,
         )
@@ -128,18 +129,21 @@ def solve(
     cost_matrix: CostMatrix,
     matchup_matrix: MatchupMatrix,
     interested_teams: list[Team],
-) -> pulp.LpProblem:
+) -> tuple[pulp.LpProblem, pulp.LpSolveStats]:
     """
     Driver function for creating and solving the linear program.
 
     This function is designed for solving for problem variants in parallel
     with one team per process. Concretely, this means that all inputs only
     contains data relevant to the team in question and can be reused.
+
+    The solve status is only available on the returned stats, not on the problem.
     """
     optimal_trip = pulp.LpProblem("optimal_trip", pulp.LpMinimize)
 
     # tunable variables
     edge_variables = create_edge_variables(
+        optimal_trip,
         events,
         max_driving_hours_per_day,
         driving_duration_matrix,
@@ -167,6 +171,6 @@ def solve(
         interested_teams,
     )
 
-    optimal_trip.solve(solver=pulp.HiGHS(msg=False))
-    logger.info("Solver status: %s", pulp.LpStatus[optimal_trip.status])
-    return optimal_trip
+    stats = optimal_trip.solve(solver=pulp.HiGHS(msg=False))
+    logger.info("Solver status: %s", stats.status_str)
+    return optimal_trip, stats
