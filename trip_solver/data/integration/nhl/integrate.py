@@ -23,7 +23,15 @@ def format_team_name(team: NHLScheduleTeam) -> str:  # noqa: D103
     return f"{team.placeName.default} {team.commonName.default}"
 
 
-def get_venue_name_info(game: NHLScheduleGame) -> tuple[str, str]:  # noqa: D103
+def get_venue_name_info(game: NHLScheduleGame) -> tuple[str, str]:
+    """
+    Get NHL venue name and venue place name.
+
+    Neutral site games are not played in the home team's city, so adding it to the place
+    search can match the wrong venue entirely.
+    """
+    if game.neutralSite:
+        return game.venue.default, ""
     return game.venue.default, game.homeTeam.placeName.default
 
 
@@ -49,8 +57,7 @@ if __name__ == "__main__":
 
     for game in nhl_games:
         # games outside North America are removed later based on the venue's country
-        # there is a neutralSite attribute but using that also discards special
-        # exhibition series and outdoor games etc.
+        # neutralSite cannot be used for that since it also marks outdoor games etc.
         if get_venue_name_info(game) not in venue_ids:
             venue_ids[get_venue_name_info(game)] = len(venue_ids) + 1
         unique_teams.add((game.homeTeam.id, format_team_name(game.homeTeam)))
