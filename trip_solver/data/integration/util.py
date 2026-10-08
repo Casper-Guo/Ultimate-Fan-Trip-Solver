@@ -30,7 +30,10 @@ def get_venue_info(venue_name: str, venue_place_name: str, venue_id: int | str) 
             TextSearch()
             .post_for_data(
                 request_body=TextSearchRequestBody(
-                    textQuery=f"{venue_name}, {venue_place_name}",
+                    # filters out venue_place_name if it is the empty string
+                    # which symbolizes neutral site games
+                    # in which case the query text is the venue name only
+                    textQuery=", ".join(filter(None, (venue_name, venue_place_name))),
                 ),
             )
             .places[0]
