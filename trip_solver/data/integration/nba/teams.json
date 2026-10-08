@@ -2,123 +2,123 @@
   "teams": [
     {
       "name": "Atlanta Hawks",
-      "id": 1610612737
+      "id": 1
     },
     {
       "name": "Boston Celtics",
-      "id": 1610612738
-    },
-    {
-      "name": "Cleveland Cavaliers",
-      "id": 1610612739
+      "id": 2
     },
     {
       "name": "New Orleans Pelicans",
-      "id": 1610612740
+      "id": 3
     },
     {
       "name": "Chicago Bulls",
-      "id": 1610612741
+      "id": 4
+    },
+    {
+      "name": "Cleveland Cavaliers",
+      "id": 5
     },
     {
       "name": "Dallas Mavericks",
-      "id": 1610612742
+      "id": 6
     },
     {
       "name": "Denver Nuggets",
-      "id": 1610612743
-    },
-    {
-      "name": "Golden State Warriors",
-      "id": 1610612744
-    },
-    {
-      "name": "Houston Rockets",
-      "id": 1610612745
-    },
-    {
-      "name": "LA Clippers",
-      "id": 1610612746
-    },
-    {
-      "name": "Los Angeles Lakers",
-      "id": 1610612747
-    },
-    {
-      "name": "Miami Heat",
-      "id": 1610612748
-    },
-    {
-      "name": "Milwaukee Bucks",
-      "id": 1610612749
-    },
-    {
-      "name": "Minnesota Timberwolves",
-      "id": 1610612750
-    },
-    {
-      "name": "Brooklyn Nets",
-      "id": 1610612751
-    },
-    {
-      "name": "New York Knicks",
-      "id": 1610612752
-    },
-    {
-      "name": "Orlando Magic",
-      "id": 1610612753
-    },
-    {
-      "name": "Indiana Pacers",
-      "id": 1610612754
-    },
-    {
-      "name": "Philadelphia 76ers",
-      "id": 1610612755
-    },
-    {
-      "name": "Phoenix Suns",
-      "id": 1610612756
-    },
-    {
-      "name": "Portland Trail Blazers",
-      "id": 1610612757
-    },
-    {
-      "name": "Sacramento Kings",
-      "id": 1610612758
-    },
-    {
-      "name": "San Antonio Spurs",
-      "id": 1610612759
-    },
-    {
-      "name": "Oklahoma City Thunder",
-      "id": 1610612760
-    },
-    {
-      "name": "Toronto Raptors",
-      "id": 1610612761
-    },
-    {
-      "name": "Utah Jazz",
-      "id": 1610612762
-    },
-    {
-      "name": "Memphis Grizzlies",
-      "id": 1610612763
-    },
-    {
-      "name": "Washington Wizards",
-      "id": 1610612764
+      "id": 7
     },
     {
       "name": "Detroit Pistons",
-      "id": 1610612765
+      "id": 8
+    },
+    {
+      "name": "Golden State Warriors",
+      "id": 9
+    },
+    {
+      "name": "Houston Rockets",
+      "id": 10
+    },
+    {
+      "name": "Indiana Pacers",
+      "id": 11
+    },
+    {
+      "name": "Los Angeles Clippers",
+      "id": 12
+    },
+    {
+      "name": "Los Angeles Lakers",
+      "id": 13
+    },
+    {
+      "name": "Miami Heat",
+      "id": 14
+    },
+    {
+      "name": "Milwaukee Bucks",
+      "id": 15
+    },
+    {
+      "name": "Minnesota Timberwolves",
+      "id": 16
+    },
+    {
+      "name": "Brooklyn Nets",
+      "id": 17
+    },
+    {
+      "name": "New York Knicks",
+      "id": 18
+    },
+    {
+      "name": "Orlando Magic",
+      "id": 19
+    },
+    {
+      "name": "Philadelphia 76ers",
+      "id": 20
+    },
+    {
+      "name": "Phoenix Suns",
+      "id": 21
+    },
+    {
+      "name": "Portland Trail Blazers",
+      "id": 22
+    },
+    {
+      "name": "Sacramento Kings",
+      "id": 23
+    },
+    {
+      "name": "San Antonio Spurs",
+      "id": 24
+    },
+    {
+      "name": "Oklahoma City Thunder",
+      "id": 25
+    },
+    {
+      "name": "Utah Jazz",
+      "id": 26
+    },
+    {
+      "name": "Washington Wizards",
+      "id": 27
+    },
+    {
+      "name": "Toronto Raptors",
+      "id": 28
+    },
+    {
+      "name": "Memphis Grizzlies",
+      "id": 29
     },
     {
       "name": "Charlotte Hornets",
-      "id": 1610612766
+      "id": 30
     }
   ]
 }
